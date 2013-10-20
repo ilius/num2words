@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-##   File: num2fa-0.1.2.py
+##   File: num2fa-0.2.py
 ##
 ##   Author: Saeed Rasooli <saeed.gnu@gmail.com>  (ilius)
 ##
@@ -65,8 +65,10 @@ def split3(st):
   return parts
 
 def num2fa(st):
-  if type(st)==int:
-    return num2fa(str(st))
+  if isinstance(st, (int, long)):
+    st = str(st)
+  elif not isinstance(st, basestring):
+    raise TypeError('bad type "%s"'%type(st))
   if len(st)>3:
     parts = split3(st)
     fa=''
@@ -125,13 +127,37 @@ def num2fa(st):
   return fa
 
 
-
-
+def num2fa_ordinary(arg):
+  if isinstance(arg, (int, long)):
+    num = arg
+    st = str(arg)
+  elif isinstance(st, basestring):
+    num = int(arg)
+    st = arg
+  else:
+    raise TypeError('bad type "%s"'%type(st))
+  if num==1:
+    return 'اول' ## OR 'یکم'
+  elif num==10:
+    return 'دهم'
+  norm_fa = num2fa(st).decode('utf-8')
+  if len(norm_fa)==0:
+    return ''
+  if norm_fa.endswith(u'ی'):
+    norm_fa += u'‌ام'
+  elif norm_fa.endswith(u'سه'):
+    norm_fa = norm_fa[:-1] + u'وم'
+  else:
+    norm_fa += u'م'
+  return norm_fa.encode('utf-8')
 
 
 if __name__=='__main__':
-  for arg in sys.argv[1:]:
-    #print '%s\t%s'%(arg,split3(arg))
-    print '%s\t%s'%(arg,num2fa(arg))
-      
+  n = 10
+  if len(sys.argv)>1:
+    n = int(sys.argv[1])
+  mypath = sys.argv[0]
+  file(mypath+'.out.txt', 'w').write('\r\n'.join(
+    ['%s\t%s\t%s'%(i, num2fa(i), num2fa_ordinary(i)) for i in range(1, n+1)]
+  ))
 
