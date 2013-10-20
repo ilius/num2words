@@ -151,13 +151,19 @@ def num2fa_ordinary(arg):
         norm_fa += u'م'
     return norm_fa.encode('utf-8')
 
-
-if __name__=='__main__':
-    n = 10
-    if len(sys.argv)>1:
-        n = int(sys.argv[1])
+def writeToFileAllUpTo(n=100):
     mypath = sys.argv[0]
     file(mypath+'.out.txt', 'w').write('\r\n'.join(
         ['%s\t%s\t%s'%(i, num2fa(i), num2fa_ordinary(i)) for i in range(1, n+1)]
     ))
+
+if __name__=='__main__':
+    for arg in sys.argv[1:]:
+        try:
+            k = int(arg)
+        except ValueError:
+            print '%s: non-numeric argument'%arg
+        else:
+            print '%s\t%s\t%s'%(k, num2fa(k), num2fa_ordinary(k))
+
 
