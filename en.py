@@ -1,10 +1,52 @@
-digit_text = {'00': 'Zero', '01': 'One', '02': 'Two', '03': 'Three',
-'04': 'Four', '05': 'Five', '06': 'Six', '07': 'Seven', '08': 'Eight',
-'09': 'Nine', '10': 'Ten', '11': 'Eleven', '12': 'Twelve', '13': 'Thirteen',
-'14': 'Fourteen', '15': 'Fifteen', '16': 'Sixteen', '17': 'Seventeen',
-'18': 'Eighteen', '19': 'Nineteen', '20': 'Twenty', '30': 'Thirty',
-'40': 'Forty', '50': 'Fifty', '60': 'Sixty', '70': 'Seventy', '80': 'Eighty',
-'90': 'Ninety'}
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+## File: en.py
+##
+## Author: Saeed Rasooli <saeed.gnu@gmail.com>    (ilius)
+##
+## This library is free software; you can redistribute it and/or
+## modify it under the terms of the GNU Lesser General Public
+## License as published by the Free Software Foundation; either
+## version 2.1 of the License, or (at your option) any later version.
+##
+## This library is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the GNU
+## Lesser General Public License for more details.
+
+
+import sys
+
+digit_text = {
+    '00': 'Zero',
+    '01': 'One',
+    '02': 'Two',
+    '03': 'Three',
+    '04': 'Four',
+    '05': 'Five',
+    '06': 'Six',
+    '07': 'Seven',
+    '08': 'Eight',
+    '09': 'Nine',
+    '10': 'Ten',
+    '11': 'Eleven',
+    '12': 'Twelve',
+    '13': 'Thirteen',
+    '14': 'Fourteen',
+    '15': 'Fifteen',
+    '16': 'Sixteen',
+    '17': 'Seventeen',
+    '18': 'Eighteen',
+    '19': 'Nineteen',
+    '20': 'Twenty',
+    '30': 'Thirty',
+    '40': 'Forty',
+    '50': 'Fifty',
+    '60': 'Sixty',
+    '70': 'Seventy',
+    '80': 'Eighty',
+    '90': 'Ninety',
+}
 
 cats = ['Billion', 'Million', 'Thousand']
 
@@ -42,17 +84,23 @@ def num2text(n):
     if s:
         return ', '.join(s)
 
-import sys, random
 
-if len(sys.argv) < 2:
-    n = random.randrange(999999999999)
-else:
-    n = int(sys.argv[1])
+def testRandom():
+    import random
+    k = random.randrange(999999999999)
+    print(k)
+    print(num2text(k))
 
-print(n)
 
-if n > 999999999999:
-    print('Number must be less than 999999999999')
-    sys.exit()
+if __name__=='__main__':
+    for arg in sys.argv[1:]:
+        try:
+            k = int(arg)
+        except ValueError:
+            print '%s: non-numeric argument'%arg
+        else:
+            if k > 999999999999:
+                print('%s: number must be less than 999,999,999,999'%k)
+            else:
+                print '%s\t%s'%(k, num2text(k))
 
-print(num2text(n))
