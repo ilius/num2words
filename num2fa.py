@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-##   File: num2fa-0.1.1.py
+##   File: num2fa-0.1.2.py
 ##
 ##   Author: Saeed Rasooli <saeed.gnu@gmail.com>  (ilius)
 ##
@@ -17,6 +17,7 @@
 import sys
 
 faBaseNum={
+
 1:'یک',
 2:'دو',
 3:'سه',
@@ -47,51 +48,62 @@ faBaseNum={
 100:'صد',
 200:'دویست',
 300:'سیصد',
-500:'پانصد',
-1000:'هزار',
-10**6:'میلیون',
-10**9:'میلیارد'
+500:'پانصد'
 }
 faBaseNumKeys = faBaseNum.keys()
+faBigNum=["یک","هزار","میلیون","میلیارد"]
+faBigNumSize=len(faBigNum)
 
-def split3(n):
+def split3(st):
   parts=[]
-  while n>999:
-    parts.append(n%1000)
-    n = int(n/1000)
-  parts.append(n)
+  n = len(st)
+  (d,m)=divmod(n,3)
+  for i in range(d):
+    parts.append(int(st[n-3*i-3:n-3*i]))
+  if m>0:
+    parts.append(int(st[:m]))
   return parts
 
-def num2fa(n):
-  if n in faBaseNumKeys:
-    return faBaseNum[n]
-  if n>999:
-    parts = split3(n)
+def num2fa(st):
+  if type(st)==int:
+    return num2fa(str(st))
+  if len(st)>3:
+    parts = split3(st)
     fa=''
     k=len(parts)
     for i in range(k):
+      faOrder = ''
       p = parts[i]
       if i==0:
         fa += num2fa(p)
         continue
-      order = 10**(3*i)
-      if order in faBaseNumKeys:
-        faOrder = faBaseNum[order]
+      if i<faBigNumSize:
+        faOrder=faBigNum[i]
       else:
-        (d,m) = divmod(i,3)
-        ls = [faBaseNum[10**9]] * d
+        faOrder=''
+        (d,m) = divmod(i, 3)
+        t9 = faBigNum[3]
+        for j in range(d):
+          if j>0:
+            faOrder += "‌"
+          faOrder += t9
         if m!=0:
-          ls = [faBaseNum[10**(3*m)]] + ls
-        faOrder = '‌'.join(ls)
+          if faOrder!='':
+            faOrder = "‌" + faOrder
+          faOrder = faBigNum[m] + faOrder
       if i==1 and p==1:
-        fa = faOrder + ' و ' + fa
+        fa = faOrder + " و " + fa
       else:
-        fa = num2fa(p) + ' ' + faOrder + ' و ' + fa
+        fa = num2fa(p) + " " + faOrder + " و " + fa
     return fa
   ## now assume that n <= 999
+  n = int(st)
+  if n in faBaseNumKeys:
+    return faBaseNum[n]
   y = n%10
   d = int((n%100)/10)
   s = int(n/100)
+  #print s, d, y
   dy = 10*d+y
   fa=''
   if s!=0:
@@ -119,16 +131,7 @@ def num2fa(n):
 
 if __name__=='__main__':
   for arg in sys.argv[1:]:
-    try:
-      i = int(arg)
-    except:
-      pass
-    else:
-      print '%s\t%s'%(i,num2fa(i))
-  ############################
-  """
-  f=file('fa_num.txt', 'w')
-  for i in range(10000):
-    f.write('%s\t%s\n'%(i,num2fa(i)))
-  f.close()
-  """ 
+    #print '%s\t%s'%(arg,split3(arg))
+    print '%s\t%s'%(arg,num2fa(arg))
+      
+
