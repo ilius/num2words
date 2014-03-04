@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-## File: en.py
+## File: num2words/en.py
 ##
 ## Author: Saeed Rasooli <saeed.gnu@gmail.com>    (ilius)
 ##
@@ -50,7 +50,31 @@ digit_text = {
 
 cats = ['Billion', 'Million', 'Thousand']
 
-def num2text2(n):
+
+def convert_thousand(n):
+    assert n < 1000
+    if n < 10:
+        return digit_text['0' + str(n)]
+    elif n < 100:
+        return convert2(n)
+    else:
+        n = str(n)
+        return "%s Hundred%s" % (digit_text['0'+n[0]], (' ' + convert2(int(n[1:])), '')[n[1:] == '00'])
+
+def convert(n):
+    n = str(n)
+    n = n.zfill(12)
+    s = []
+    for (i, cat) in enumerate(cats):
+        start, end = i * 3, (i + 1) * 3
+        if int(n[start:end]) > 0:
+            s.append(convert_thousand(int(n[start:end])) + ' ' + cat)
+    if int(n[-3:]) > 0:
+        s.append(convert_thousand(int(n[-3:])))
+    if s:
+        return ', '.join(s)
+
+def convert2(n):
     n = str(n)
     if len(n) < 2: n = '0' + n
     if n[0] == '1' or n[1] == '0':
@@ -61,35 +85,13 @@ def num2text2(n):
         else:
             return digit_text[n[0]+'0'] + ' ' + digit_text['0'+n[1]]
 
-def num2text3(n):
-    assert n < 1000
-    if n < 10:
-        return digit_text['0' + str(n)]
-    elif n < 100:
-        return num2text2(n)
-    else:
-        n = str(n)
-        return "%s Hundred%s" % (digit_text['0'+n[0]], (' ' + num2text2(int(n[1:])), '')[n[1:] == '00'])
-
-def num2text(n):
-    n = str(n)
-    n = n.zfill(12)
-    s = []
-    for (i, cat) in enumerate(cats):
-        start, end = i * 3, (i + 1) * 3
-        if int(n[start:end]) > 0:
-            s.append(num2text3(int(n[start:end])) + ' ' + cat)
-    if int(n[-3:]) > 0:
-        s.append(num2text3(int(n[-3:])))
-    if s:
-        return ', '.join(s)
 
 
 def testRandom():
     import random
     k = random.randrange(999999999999)
     print(k)
-    print(num2text(k))
+    print(convert(k))
 
 
 if __name__=='__main__':
@@ -102,5 +104,5 @@ if __name__=='__main__':
             if k > 999999999999:
                 print('%s: number must be less than 999,999,999,999'%k)
             else:
-                print '%s\t%s'%(k, num2text(k))
+                print '%s\t%s'%(k, convert(k))
 

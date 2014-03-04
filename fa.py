@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-## File: num2fa-0.2.py
+## File: num2words/fa.py
 ##
 ## Author: Saeed Rasooli <saeed.gnu@gmail.com>    (ilius)
 ##
@@ -64,7 +64,7 @@ def split3(st):
         parts.append(int(st[:m]))
     return parts
 
-def num2fa(st):
+def convert(st):
     if isinstance(st, (int, long)):
         st = str(st)
     elif not isinstance(st, basestring):
@@ -77,7 +77,7 @@ def num2fa(st):
             faOrder = ''
             p = parts[i]
             if i==0:
-                fa += num2fa(p)
+                fa += convert(p)
                 continue
             if i < faBigNumSize:
                 faOrder = faBigNum[i]
@@ -96,7 +96,7 @@ def num2fa(st):
             if i==1 and p==1:
                 fa = faOrder + " و " + fa
             else:
-                fa = num2fa(p) + " " + faOrder + " و " + fa
+                fa = convert(p) + " " + faOrder + " و " + fa
         return fa
     ## now assume that n <= 999
     n = int(st)
@@ -127,7 +127,7 @@ def num2fa(st):
     return fa
 
 
-def num2fa_ordinary(arg):
+def convert_ordinary(arg):
     if isinstance(arg, (int, long)):
         num = arg
         st = str(arg)
@@ -140,7 +140,7 @@ def num2fa_ordinary(arg):
         return 'اول' ## OR 'یکم' ## FIXME
     elif num == 10:
         return 'دهم'
-    norm_fa = num2fa(st).decode('utf-8')
+    norm_fa = convert(st).decode('utf-8')
     if len(norm_fa)==0:
         return ''
     if norm_fa.endswith(u'ی'):
@@ -154,7 +154,7 @@ def num2fa_ordinary(arg):
 def writeToFileAllUpTo(n=100):
     mypath = sys.argv[0]
     file(mypath+'.out.txt', 'w').write('\r\n'.join(
-        ['%s\t%s\t%s'%(i, num2fa(i), num2fa_ordinary(i)) for i in range(1, n+1)]
+        ['%s\t%s\t%s'%(i, convert(i), convert_ordinary(i)) for i in range(1, n+1)]
     ))
 
 if __name__=='__main__':
@@ -164,6 +164,6 @@ if __name__=='__main__':
         except ValueError:
             print '%s: non-numeric argument'%arg
         else:
-            print '%s\t%s\t%s'%(k, num2fa(k), num2fa_ordinary(k))
+            print '%s\t%s\t%s'%(k, convert(k), convert_ordinary(k))
 
 
