@@ -50,16 +50,26 @@ digit_text = {
 
 cats = ['Billion', 'Million', 'Thousand']
 
+def convert_hundred(n):
+    n = str(n)
+    if len(n) < 2: n = '0' + n
+    if n[0] == '1' or n[1] == '0':
+        return digit_text[n]
+    else:
+        if int(n) < 10:
+            return digit_text['0' + n[1]]
+        else:
+            return digit_text[n[0]+'0'] + ' ' + digit_text['0'+n[1]]
 
 def convert_thousand(n):
     assert n < 1000
     if n < 10:
         return digit_text['0' + str(n)]
     elif n < 100:
-        return convert2(n)
+        return convert_hundred(n)
     else:
         n = str(n)
-        return "%s Hundred%s" % (digit_text['0'+n[0]], (' ' + convert2(int(n[1:])), '')[n[1:] == '00'])
+        return "%s Hundred%s" % (digit_text['0'+n[0]], (' ' + convert_hundred(int(n[1:])), '')[n[1:] == '00'])
 
 def convert(n):
     n = str(n)
@@ -74,16 +84,6 @@ def convert(n):
     if s:
         return ', '.join(s)
 
-def convert2(n):
-    n = str(n)
-    if len(n) < 2: n = '0' + n
-    if n[0] == '1' or n[1] == '0':
-        return digit_text[n]
-    else:
-        if int(n) < 10:
-            return digit_text['0' + n[1]]
-        else:
-            return digit_text[n[0]+'0'] + ' ' + digit_text['0'+n[1]]
 
 
 
