@@ -164,6 +164,6 @@ if __name__=='__main__':
         except ValueError:
             print '%s: non-numeric argument'%arg
         else:
-            print '%s\t%s\t%s'%(k, convert(k), convert_ordinary(k))
+            print '%s\n%s\n%s\n'%(k, convert(k), convert_ordinary(k))
 
 
