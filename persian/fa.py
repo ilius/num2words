@@ -97,6 +97,7 @@ def convert(st):
                 fa = faOrder + " و " + fa
             else:
                 fa = convert(p) + " " + faOrder + " و " + fa
+        fa = fa.rstrip(" و ")
         return fa
     ## now assume that n <= 999
     n = int(st)
