@@ -79,25 +79,24 @@ def convert(st):
             if p == 0:
                 continue
             if i==0:
-                fa += convert(p)
-                continue
-            if i < faBigNumSize:
-                faOrder = faBigNum[i]
+                wpart = convert(p)
             else:
-                faOrder = ''
-                (d,m) = divmod(i, 3)
-                t9 = faBigNum[3]
-                for j in range(d):
-                    if j>0:
-                        faOrder += "‌"
-                    faOrder += t9
-                if m!=0:
-                    if faOrder!='':
-                        faOrder = "‌" + faOrder
-                    faOrder = faBigNum[m] + faOrder
-            wparts.append(
-                faOrder if i==1 and p==1 else convert(p) + " " + faOrder
-            )
+                if i < faBigNumSize:
+                    faOrder = faBigNum[i]
+                else:
+                    faOrder = ''
+                    (d,m) = divmod(i, 3)
+                    t9 = faBigNum[3]
+                    for j in range(d):
+                        if j>0:
+                            faOrder += "‌"
+                        faOrder += t9
+                    if m!=0:
+                        if faOrder!='':
+                            faOrder = "‌" + faOrder
+                        faOrder = faBigNum[m] + faOrder
+                wpart = faOrder if i==1 and p==1 else convert(p) + " " + faOrder
+            wparts.append(wpart)
         return " و ".join(reversed(wparts))
     ## now assume that n <= 999
     n = int(st)
