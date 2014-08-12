@@ -71,11 +71,13 @@ def convert(st):
         raise TypeError('bad type "%s"'%type(st))
     if len(st) > 3:
         parts = split3(st)
-        fa = ''
         k = len(parts)
+        wparts = []
         for i in range(k):
             faOrder = ''
             p = parts[i]
+            if p == 0:
+                continue
             if i==0:
                 fa += convert(p)
                 continue
@@ -93,12 +95,10 @@ def convert(st):
                     if faOrder!='':
                         faOrder = "‌" + faOrder
                     faOrder = faBigNum[m] + faOrder
-            if i==1 and p==1:
-                fa = faOrder + " و " + fa
-            else:
-                fa = convert(p) + " " + faOrder + " و " + fa
-        fa = fa.rstrip(" و ")
-        return fa
+            wparts.append(
+                faOrder if i==1 and p==1 else convert(p) + " " + faOrder
+            )
+        return " و ".join(reversed(wparts))
     ## now assume that n <= 999
     n = int(st)
     if n in faBaseNumKeys:
