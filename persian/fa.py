@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 ## File: num2words/fa.py
 ##
@@ -70,7 +70,7 @@ def convert(st):
     if isinstance(st, int):
         st = str(st)
     elif not isinstance(st, str):
-        raise TypeError('bad type "%s"' % type(st))
+        raise TypeError('bad type "{type(st)}"')
     if len(st) > 3:
         parts = split3(st)
         k = len(parts)
@@ -137,21 +137,21 @@ def convert_ordinary(arg):
         num = int(arg)
         st = arg
     else:
-        raise TypeError('bad type "%s"' % type(arg))
+        raise TypeError('bad type "{type(arg)}"')
     if num == 1:
         return 'اول'  ## OR 'یکم' ## FIXME
     elif num == 10:
         return 'دهم'
-    norm_fa = convert(st).decode('utf-8')
+    norm_fa = convert(st)
     if len(norm_fa) == 0:
         return ''
-    if norm_fa.endswith(u'ی'):
-        norm_fa += u'‌ام'
-    elif norm_fa.endswith(u'سه'):
-        norm_fa = norm_fa[:-1] + u'وم'
+    if norm_fa.endswith('ی'):
+        norm_fa += '‌ام'
+    elif norm_fa.endswith('سه'):
+        norm_fa = norm_fa[:-1] + 'وم'
     else:
-        norm_fa += u'م'
-    return norm_fa.encode('utf-8')
+        norm_fa += 'م'
+    return norm_fa
 
 
 if __name__ == '__main__':
@@ -159,6 +159,6 @@ if __name__ == '__main__':
         try:
             k = int(arg)
         except ValueError:
-            print('%s: non-numeric argument' % arg)
+            print('{arg}: non-numeric argument')
         else:
-            print('%s\n%s\n%s\n' % (k, convert(k), convert_ordinary(k)))
+            print(f'{k}\n{convert(k)}\n{convert_ordinary(k)}\n')
