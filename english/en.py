@@ -71,10 +71,9 @@ def convert_thousand(n):
 	if n < 100:
 		return convert_hundred(n)
 	n = str(n)
-	return "%s Hundred%s" % (
-		digit_text['0' + n[0]],
-		(' ' + convert_hundred(int(n[1:])), '')[n[1:] == '00']
-	)
+	if n[1:] == '00':
+		return f"{digit_text['0'+n[0]]} Hundred"
+	return f"{digit_text['0'+n[0]]} Hundred {convert_hundred(int(n[1:]))}"
 
 
 def convert(n):
