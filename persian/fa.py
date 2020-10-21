@@ -1,23 +1,22 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-## File: num2words/fa.py
-##
-## Author: Saeed Rasooli <saeed.gnu@gmail.com>    (ilius)
-##
-## This library is free software; you can redistribute it and/or
-## modify it under the terms of the GNU Lesser General Public
-## License as published by the Free Software Foundation; either
-## version 2.1 of the License, or (at your option) any later version.
-##
-## This library is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the GNU
-## Lesser General Public License for more details.
+# File: num2words/fa.py
+#
+# Author: Saeed Rasooli <saeed.gnu@gmail.com>    (ilius)
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Lesser General Public License for more details.
 
 import sys
 
 faBaseNum = {
-	
 	1: 'یک',
 	2: 'دو',
 	3: 'سه',
@@ -100,7 +99,7 @@ def convert(st):
 				wpart = faOrder if i == 1 and p == 1 else convert(p) + " " + faOrder
 			wparts.append(wpart)
 		return " و ".join(reversed(wparts))
-	## now assume that n <= 999
+	# now assume that n <= 999
 	n = int(st)
 	if n in faBaseNumKeys:
 		return faBaseNum[n]
@@ -139,7 +138,7 @@ def convert_ordinary(arg):
 	else:
 		raise TypeError('bad type "{type(arg)}"')
 	if num == 1:
-		return 'اول'  ## OR 'یکم' ## FIXME
+		return 'اول'  # OR 'یکم' # FIXME
 	elif num == 10:
 		return 'دهم'
 	norm_fa = convert(st)
