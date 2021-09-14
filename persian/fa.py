@@ -17,40 +17,52 @@
 import sys
 
 faBaseNum = {
-	1: 'یک',
-	2: 'دو',
-	3: 'سه',
-	4: 'چهار',
-	5: 'پنج',
-	6: 'شش',
-	7: 'هفت',
-	8: 'هشت',
-	9: 'نه',
-	10: 'ده',
-	11: 'یازده',
-	12: 'دوازده',
-	13: 'سیزده',
-	14: 'چهارده',
-	15: 'پانزده',
-	16: 'شانزده',
-	17: 'هفده',
-	18: 'هجده',
-	19: 'نوزده',
-	20: 'بیست',
-	30: 'سی',
-	40: 'چهل',
-	50: 'پنجاه',
-	60: 'شصت',
-	70: 'هفتاد',
-	80: 'هشتاد',
-	90: 'نود',
-	100: 'صد',
-	200: 'دویست',
-	300: 'سیصد',
-	500: 'پانصد'
+	1: "یک",
+	2: "دو",
+	3: "سه",
+	4: "چهار",
+	5: "پنج",
+	6: "شش",
+	7: "هفت",
+	8: "هشت",
+	9: "نه",
+	10: "ده",
+	11: "یازده",
+	12: "دوازده",
+	13: "سیزده",
+	14: "چهارده",
+	15: "پانزده",
+	16: "شانزده",
+	17: "هفده",
+	18: "هجده",
+	19: "نوزده",
+	20: "بیست",
+	30: "سی",
+	40: "چهل",
+	50: "پنجاه",
+	60: "شصت",
+	70: "هفتاد",
+	80: "هشتاد",
+	90: "نود",
+	100: "صد",
+	200: "دویست",
+	300: "سیصد",
+	500: "پانصد"
 }
-faBaseNumKeys = faBaseNum.keys()
-faBigNum = ["یک", "هزار", "میلیون", "میلیارد"]
+faBaseNumKeys = set(faBaseNum.keys())
+
+faBigNumFirst = ["یک", "هزار", "میلیون"]
+
+# European
+faBigNumEU = faBigNumFirst + ["میلیارد", "بیلیون", "بیلیارد", "تریلیون"]
+
+# American
+faBigNumUS = faBigNumFirst + ["بیلیون", "تریلیون", "کوآدریلیون", "کوینتیلیون"]
+
+
+faBigNum = faBigNumEU
+
+
 faBigNumSize = len(faBigNum)
 
 
@@ -69,13 +81,13 @@ def convert(st):
 	if isinstance(st, int):
 		st = str(st)
 	elif not isinstance(st, str):
-		raise TypeError('bad type "{type(st)}"')
+		raise TypeError("bad type {type(st)!r}")
 	if len(st) > 3:
 		parts = split3(st)
 		k = len(parts)
 		wparts = []
 		for i in range(k):
-			faOrder = ''
+			faOrder = ""
 			p = parts[i]
 			if p == 0:
 				continue
@@ -85,7 +97,7 @@ def convert(st):
 				if i < faBigNumSize:
 					faOrder = faBigNum[i]
 				else:
-					faOrder = ''
+					faOrder = ""
 					(d, m) = divmod(i, 3)
 					t9 = faBigNum[3]
 					for j in range(d):
@@ -93,7 +105,7 @@ def convert(st):
 							faOrder += "‌"
 						faOrder += t9
 					if m != 0:
-						if faOrder != '':
+						if faOrder != "":
 							faOrder = "‌" + faOrder
 						faOrder = faBigNum[m] + faOrder
 				wpart = faOrder if i == 1 and p == 1 else convert(p) + " " + faOrder
@@ -108,21 +120,21 @@ def convert(st):
 	s = int(n / 100)
 	# print s, d, y
 	dy = 10 * d + y
-	fa = ''
+	fa = ""
 	if s != 0:
 		if s * 100 in faBaseNumKeys:
 			fa += faBaseNum[s * 100]
 		else:
 			fa += (faBaseNum[s] + faBaseNum[100])
 		if d != 0 or y != 0:
-			fa += ' و '
+			fa += " و "
 	if d != 0:
 		if dy in faBaseNumKeys:
 			fa += faBaseNum[dy]
 			return fa
 		fa += faBaseNum[d * 10]
 		if y != 0:
-			fa += ' و '
+			fa += " و "
 	if y != 0:
 		fa += faBaseNum[y]
 	return fa
@@ -136,28 +148,29 @@ def convert_ordinary(arg):
 		num = int(arg)
 		st = arg
 	else:
-		raise TypeError('bad type "{type(arg)}"')
+		raise TypeError("bad type {type(arg)!r}")
 	if num == 1:
-		return 'اول'  # OR 'یکم' # FIXME
+		return "اول"
+		# or "یکم"
 	elif num == 10:
-		return 'دهم'
+		return "دهم"
 	norm_fa = convert(st)
-	if len(norm_fa) == 0:
-		return ''
-	if norm_fa.endswith('ی'):
-		norm_fa += '‌ام'
-	elif norm_fa.endswith('سه'):
-		norm_fa = norm_fa[:-1] + 'وم'
+	if not norm_fa:
+		return ""
+	if norm_fa.endswith("ی"):
+		norm_fa += "‌ام"
+	elif norm_fa.endswith("سه"):
+		norm_fa = norm_fa[:-1] + "وم"
 	else:
-		norm_fa += 'م'
+		norm_fa += "م"
 	return norm_fa
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	for arg in sys.argv[1:]:
 		try:
 			k = int(arg)
 		except ValueError:
-			print('{arg}: non-numeric argument')
+			print("{arg}: non-numeric argument")
 		else:
-			print(f'{k}\n{convert(k)}\n{convert_ordinary(k)}\n')
+			print(f"{k:,}\n{convert(k)}\n{convert_ordinary(k)}\n")
