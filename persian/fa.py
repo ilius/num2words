@@ -54,16 +54,16 @@ faBaseNumKeys = set(faBaseNum.keys())
 faBigNumFirst = ["یک", "هزار", "میلیون"]
 
 # European
-faBigNumEU = faBigNumFirst + ["میلیارد", "بیلیون", "بیلیارد", "تریلیون"]
+faBigNumEU = faBigNumFirst + ["میلیارد", "بیلیون", "بیلیارد", "تریلیون", "تریلیارد"]
 
 # American
-faBigNumUS = faBigNumFirst + ["بیلیون", "تریلیون", "کوآدریلیون", "کوینتیلیون"]
+faBigNumUS = faBigNumFirst + ["بیلیون", "تریلیون", "کوآدریلیون", "کوینتیلیون", "سکستیلیون"]
+
+# Common in Iran (the rest are uncommon or mistaken)
+faBigNumIran = faBigNumFirst + ["میلیارد", "تریلیون"]
 
 
-faBigNum = faBigNumEU
-
-
-faBigNumSize = len(faBigNum)
+faBigNum = faBigNumIran
 
 
 def split3(st):
@@ -94,11 +94,11 @@ def convert(st):
 			if i == 0:
 				wpart = convert(p)
 			else:
-				if i < faBigNumSize:
+				if i < len(faBigNum):
 					faOrder = faBigNum[i]
 				else:
 					faOrder = ""
-					(d, m) = divmod(i, 3)
+					d, m = divmod(i, 3)
 					t9 = faBigNum[3]
 					for j in range(d):
 						if j > 0:
