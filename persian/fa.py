@@ -47,7 +47,7 @@ faBaseNum = {
 	100: "صد",
 	200: "دویست",
 	300: "سیصد",
-	500: "پانصد"
+	500: "پانصد",
 }
 faBaseNumKeys = set(faBaseNum.keys())
 
@@ -57,7 +57,13 @@ faBigNumFirst = ["یک", "هزار", "میلیون"]
 faBigNumEU = faBigNumFirst + ["میلیارد", "بیلیون", "بیلیارد", "تریلیون", "تریلیارد"]
 
 # American
-faBigNumUS = faBigNumFirst + ["بیلیون", "تریلیون", "کوآدریلیون", "کوینتیلیون", "سکستیلیون"]
+faBigNumUS = faBigNumFirst + [
+	"بیلیون",
+	"تریلیون",
+	"کوآدریلیون",
+	"کوینتیلیون",
+	"سکستیلیون",
+]
 
 # Common in Iran (the rest are uncommon or mistaken)
 faBigNumIran = faBigNumFirst + ["میلیارد", "تریلیون"]
@@ -71,7 +77,7 @@ def split3(st):
 	n = len(st)
 	d, m = divmod(n, 3)
 	for i in range(d):
-		parts.append(int(st[n - 3 * i - 3:n - 3 * i]))
+		parts.append(int(st[n - 3 * i - 3 : n - 3 * i]))
 	if m > 0:
 		parts.append(int(st[:m]))
 	return parts
@@ -125,7 +131,7 @@ def convert(st):
 		if s * 100 in faBaseNumKeys:
 			fa += faBaseNum[s * 100]
 		else:
-			fa += (faBaseNum[s] + faBaseNum[100])
+			fa += faBaseNum[s] + faBaseNum[100]
 		if d != 0 or y != 0:
 			fa += " و "
 	if d != 0:

@@ -18,60 +18,60 @@
 import sys
 
 digit_text = {
-	'00': 'Zero',
-	'01': 'One',
-	'02': 'Two',
-	'03': 'Three',
-	'04': 'Four',
-	'05': 'Five',
-	'06': 'Six',
-	'07': 'Seven',
-	'08': 'Eight',
-	'09': 'Nine',
-	'10': 'Ten',
-	'11': 'Eleven',
-	'12': 'Twelve',
-	'13': 'Thirteen',
-	'14': 'Fourteen',
-	'15': 'Fifteen',
-	'16': 'Sixteen',
-	'17': 'Seventeen',
-	'18': 'Eighteen',
-	'19': 'Nineteen',
-	'20': 'Twenty',
-	'30': 'Thirty',
-	'40': 'Forty',
-	'50': 'Fifty',
-	'60': 'Sixty',
-	'70': 'Seventy',
-	'80': 'Eighty',
-	'90': 'Ninety',
+	"00": "Zero",
+	"01": "One",
+	"02": "Two",
+	"03": "Three",
+	"04": "Four",
+	"05": "Five",
+	"06": "Six",
+	"07": "Seven",
+	"08": "Eight",
+	"09": "Nine",
+	"10": "Ten",
+	"11": "Eleven",
+	"12": "Twelve",
+	"13": "Thirteen",
+	"14": "Fourteen",
+	"15": "Fifteen",
+	"16": "Sixteen",
+	"17": "Seventeen",
+	"18": "Eighteen",
+	"19": "Nineteen",
+	"20": "Twenty",
+	"30": "Thirty",
+	"40": "Forty",
+	"50": "Fifty",
+	"60": "Sixty",
+	"70": "Seventy",
+	"80": "Eighty",
+	"90": "Ninety",
 }
 
-cats = ['Billion', 'Million', 'Thousand']
+cats = ["Billion", "Million", "Thousand"]
 
 
 def convert_hundred(n):
 	n = str(n)
 	if len(n) < 2:
-		n = '0' + n
-	if n[0] == '1' or n[1] == '0':
+		n = "0" + n
+	if n[0] == "1" or n[1] == "0":
 		return digit_text[n]
 	else:
 		if int(n) < 10:
-			return digit_text['0' + n[1]]
+			return digit_text["0" + n[1]]
 		else:
-			return digit_text[n[0] + '0'] + ' ' + digit_text['0' + n[1]]
+			return digit_text[n[0] + "0"] + " " + digit_text["0" + n[1]]
 
 
 def convert_thousand(n):
 	assert n < 1000
 	if n < 10:
-		return digit_text['0' + str(n)]
+		return digit_text["0" + str(n)]
 	if n < 100:
 		return convert_hundred(n)
 	n = str(n)
-	if n[1:] == '00':
+	if n[1:] == "00":
 		return f"{digit_text['0'+n[0]]} Hundred"
 	return f"{digit_text['0'+n[0]]} Hundred {convert_hundred(int(n[1:]))}"
 
@@ -80,31 +80,32 @@ def convert(n):
 	n = str(n)
 	n = n.zfill(12)
 	s = []
-	for (i, cat) in enumerate(cats):
+	for i, cat in enumerate(cats):
 		start, end = i * 3, (i + 1) * 3
 		if int(n[start:end]) > 0:
-			s.append(convert_thousand(int(n[start:end])) + ' ' + cat)
+			s.append(convert_thousand(int(n[start:end])) + " " + cat)
 	if int(n[-3:]) > 0:
 		s.append(convert_thousand(int(n[-3:])))
 	if s:
-		return ', '.join(s)
+		return ", ".join(s)
 
 
 def testRandom():
 	import random
+
 	k = random.randrange(999999999999)
 	print(k)
 	print(convert(k))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	for arg in sys.argv[1:]:
 		try:
 			k = int(arg)
 		except ValueError:
-			print(f'{arg}: non-numeric argument')
+			print(f"{arg}: non-numeric argument")
 		else:
 			if k > 999999999999:
-				print(f'{k}: number must be less than 999,999,999,999')
+				print(f"{k}: number must be less than 999,999,999,999")
 			else:
-				print(f'{k}\t{convert(k)}')
+				print(f"{k}\t{convert(k)}")
