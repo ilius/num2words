@@ -75,10 +75,7 @@ faBigNum = faBigNumIran
 def split3(st):
 	n = len(st)
 	d, m = divmod(n, 3)
-	parts = [
-		int(st[n - 3 * i - 3 : n - 3 * i])
-		for i in range(d)
-	]
+	parts = [int(st[n - 3 * i - 3 : n - 3 * i]) for i in range(d)]
 	if m > 0:
 		parts.append(int(st[:m]))
 	return parts
@@ -170,6 +167,7 @@ def convert_ordinary(arg):
 	else:
 		norm_fa += "م"
 	return norm_fa
+
 
 if __name__ == "__main__":
 	for arg in sys.argv[1:]:

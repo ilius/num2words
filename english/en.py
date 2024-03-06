@@ -17,7 +17,7 @@
 
 import sys
 
-MAX_NUM = 10 ** 12 - 1
+MAX_NUM = 10**12 - 1
 
 digit_text = {
 	"00": "Zero",
@@ -97,6 +97,7 @@ def testRandom():
 	k = random.randrange(999999999999)
 	print(k)
 	print(convert(k))
+
 
 if __name__ == "__main__":
 	for arg in sys.argv[1:]:
