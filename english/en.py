@@ -57,11 +57,9 @@ def convert_hundred(n):
 		n = "0" + n
 	if n[0] == "1" or n[1] == "0":
 		return digit_text[n]
-	else:
-		if int(n) < 10:
-			return digit_text["0" + n[1]]
-		else:
-			return digit_text[n[0] + "0"] + " " + digit_text["0" + n[1]]
+	if int(n) < 10:
+		return digit_text["0" + n[1]]
+	return digit_text[n[0] + "0"] + " " + digit_text["0" + n[1]]
 
 
 def convert_thousand(n):
@@ -88,6 +86,7 @@ def convert(n):
 		s.append(convert_thousand(int(n[-3:])))
 	if s:
 		return ", ".join(s)
+	return None
 
 
 def testRandom():
@@ -102,7 +101,7 @@ if __name__ == "__main__":
 	for arg in sys.argv[1:]:
 		try:
 			k = int(arg)
-		except ValueError:
+		except ValueError:  # noqa: PERF203
 			print(f"{arg}: non-numeric argument")
 		else:
 			if k > 999999999999:

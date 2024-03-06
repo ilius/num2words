@@ -73,11 +73,12 @@ faBigNum = faBigNumIran
 
 
 def split3(st):
-	parts = []
 	n = len(st)
 	d, m = divmod(n, 3)
-	for i in range(d):
-		parts.append(int(st[n - 3 * i - 3 : n - 3 * i]))
+	parts = [
+		int(st[n - 3 * i - 3 : n - 3 * i])
+		for i in range(d)
+	]
 	if m > 0:
 		parts.append(int(st[:m]))
 	return parts
@@ -156,9 +157,8 @@ def convert_ordinary(arg):
 	else:
 		raise TypeError("bad type {type(arg)!r}")
 	if num == 1:
-		return "اول"
-		# or "یکم"
-	elif num == 10:
+		return "اول"  # or "یکم"
+	if num == 10:
 		return "دهم"
 	norm_fa = convert(st)
 	if not norm_fa:
@@ -171,12 +171,11 @@ def convert_ordinary(arg):
 		norm_fa += "م"
 	return norm_fa
 
-
 if __name__ == "__main__":
 	for arg in sys.argv[1:]:
 		try:
 			k = int(arg)
-		except ValueError:
+		except ValueError:  # noqa: PERF203
 			print("{arg}: non-numeric argument")
 		else:
 			print(f"{k:,}\n{convert(k)}\n{convert_ordinary(k)}\n")
