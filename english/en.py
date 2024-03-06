@@ -105,6 +105,6 @@ if __name__ == "__main__":
 			print(f"{arg}: non-numeric argument")
 		else:
 			if k > 999999999999:
-				print(f"{k}: number must be less than 999,999,999,999")
+				print(f"{k:,}: number must be less than 999,999,999,999")
 			else:
-				print(f"{k}\t{convert(k)}")
+				print(f"{k:,}\t{convert(k)}")
