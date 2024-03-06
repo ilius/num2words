@@ -173,6 +173,7 @@ def convert_ordinary(arg):
 
 if __name__ == "__main__":
 	for arg in sys.argv[1:]:
+		arg = arg.replace(",", "")
 		try:
 			k = int(arg)
 		except ValueError:  # noqa: PERF203

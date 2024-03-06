@@ -17,6 +17,8 @@
 
 import sys
 
+MAX_NUM = 10 ** 12 - 1
+
 digit_text = {
 	"00": "Zero",
 	"01": "One",
@@ -96,15 +98,15 @@ def testRandom():
 	print(k)
 	print(convert(k))
 
-
 if __name__ == "__main__":
 	for arg in sys.argv[1:]:
+		arg = arg.replace(",", "")
 		try:
 			k = int(arg)
 		except ValueError:  # noqa: PERF203
 			print(f"{arg}: non-numeric argument")
 		else:
-			if k > 999999999999:
-				print(f"{k:,}: number must be less than 999,999,999,999")
+			if k > MAX_NUM:
+				print(f"{k:,}: number can not be more than {MAX_NUM:,}")
 			else:
 				print(f"{k:,}\t{convert(k)}")
