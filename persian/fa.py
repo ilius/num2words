@@ -175,6 +175,6 @@ if __name__ == "__main__":
 		try:
 			k = int(arg)
 		except ValueError:  # noqa: PERF203
-			print("{arg}: non-numeric argument")
+			print(f"{arg}: non-numeric argument")
 		else:
 			print(f"{k:,}\n{convert(k)}\n{convert_ordinary(k)}\n")
