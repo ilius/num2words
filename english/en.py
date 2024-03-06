@@ -72,8 +72,8 @@ def convert_thousand(n):
 		return convert_hundred(n)
 	n = str(n)
 	if n[1:] == "00":
-		return f"{digit_text['0'+n[0]]} Hundred"
-	return f"{digit_text['0'+n[0]]} Hundred {convert_hundred(int(n[1:]))}"
+		return f"{digit_text['0' + n[0]]} Hundred"
+	return f"{digit_text['0' + n[0]]} Hundred {convert_hundred(int(n[1:]))}"
 
 
 def convert(n):
