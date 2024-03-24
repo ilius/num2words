@@ -14,6 +14,8 @@ func main() {
 		// 	panic(err)
 		// }
 		words := persian.Convert(arg)
+		words_ord := persian.ConvertOrdinalString(arg)
 		fmt.Printf("%s\t%s\n", arg, words)
+		fmt.Printf("%s\t%s\n", arg, words_ord)
 	}
 }

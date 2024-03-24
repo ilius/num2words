@@ -179,26 +179,23 @@ func Convert(st string) string {
 	return fa
 }
 
-// def convert_ordinal(arg):
-// 	if isinstance(arg, int):
-// 		num = arg
-// 		st = str(arg)
-// 	elif isinstance(arg, str):
-// 		num = int(arg)
-// 		st = arg
-// 	else:
-// 		raise TypeError("bad type {type(arg)!r}")
-// 	if num == 1:
-// 		return "اول"  # or "یکم"
-// 	if num == 10:
-// 		return "دهم"
-// 	norm_fa = convert(st)
-// 	if not norm_fa:
-// 		return ""
-// 	if norm_fa.endswith("ی"):
-// 		norm_fa += "‌ام"
-// 	elif norm_fa.endswith("سه"):
-// 		norm_fa = norm_fa[:-1] + "وم"
-// 	else:
-// 		norm_fa += "م"
-// 	return norm_fa
+func ConvertOrdinalString(str string) string {
+	if str == "1" {
+		return "اول" // or "یکم"
+	}
+	if str == "10" {
+		return "دهم"
+	}
+	norm_fa := Convert(str)
+	if norm_fa == "" {
+		return ""
+	}
+	if strings.HasSuffix(norm_fa, "ی") {
+		norm_fa += "\u200cام"
+	} else if strings.HasSuffix(norm_fa, "سه") {
+		norm_fa = norm_fa[:len(norm_fa)-1] + "وم"
+	} else {
+		norm_fa += "م"
+	}
+	return norm_fa
+}
