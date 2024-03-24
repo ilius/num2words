@@ -5,6 +5,11 @@ import (
 	"strings"
 )
 
+const (
+	fa_and = " و "
+	zwnj   = "\u200c"
+)
+
 var faBaseNum = map[int]string{
 	1:   "یک",
 	2:   "دو",
@@ -42,10 +47,18 @@ var faBaseNum = map[int]string{
 var faBigNumFirst = []string{"یک", "هزار", "میلیون"}
 
 // European
-// var faBigNumEU = append(faBigNumFirst, "میلیارد", "بیلیون", "بیلیارد", "تریلیون", "تریلیارد")
+// var faBigNumEU = append(
+// 	faBigNumFirst,
+// 	"میلیارد",
+// 	"بیلیون",
+// 	"بیلیارد",
+// 	"تریلیون",
+// 	"تریلیارد",
+// )
 
 // American
-// var faBigNumUS = append(faBigNumFirst,
+// var faBigNumUS = append(
+// 	faBigNumFirst,
 // 	"بیلیون",
 // 	"تریلیون",
 // 	"کوآدریلیون",
@@ -54,7 +67,11 @@ var faBigNumFirst = []string{"یک", "هزار", "میلیون"}
 // )
 
 // Common in Iran (the rest are uncommon or mistaken)
-var faBigNumIran = append(faBigNumFirst, "میلیارد", "تریلیون")
+var faBigNumIran = append(
+	faBigNumFirst,
+	"میلیارد",
+	"تریلیون",
+)
 
 var faBigNum = faBigNumIran
 
@@ -94,68 +111,68 @@ func convert_int(num int) (string, error) {
 }
 
 // only for len(st) > 3
-func convertStringLarge(st string) (string, error) {
-	parts, err := split3(st)
+func convertStringLarge(str string) (string, error) {
+	parts, err := split3(str)
 	if err != nil {
 		return "", err
 	}
 	k := len(parts)
-	wparts := []string{}
+	w_parts := []string{}
 	for i := range k {
-		faOrder := ""
 		p := parts[i]
 		if p == 0 {
 			continue
 		}
-		var wpart string
 		if i == 0 {
-			var err error
-			wpart, err = convert_int(p)
+			w_part, err := convert_int(p)
 			if err != nil {
 				return "", err
 			}
+			w_parts = append(w_parts, w_part)
+			continue
+		}
+		faOrder := ""
+		if i < len(faBigNum) {
+			faOrder = faBigNum[i]
 		} else {
-			if i < len(faBigNum) {
-				faOrder = faBigNum[i]
-			} else {
-				faOrder = ""
-				d := i / 3
-				m := i % 3
-				t9 := faBigNum[3]
-				for j := range d {
-					if j > 0 {
-						faOrder += "\u200c"
-					}
-					faOrder += t9
+			faOrder = ""
+			d := i / 3
+			m := i % 3
+			t9 := faBigNum[3]
+			for j := range d {
+				if j > 0 {
+					faOrder += zwnj
 				}
-				if m != 0 {
-					if faOrder != "" {
-						faOrder = "\u200c" + faOrder
-					}
-					faOrder = faBigNum[m] + faOrder
-				}
+				faOrder += t9
 			}
-			if i == 1 && p == 1 {
-				wpart = faOrder
-			} else {
-				wpart_tmp, err := convert_int(p)
-				if err != nil {
-					return "", err
+			if m != 0 {
+				if faOrder != "" {
+					faOrder = zwnj + faOrder
 				}
-				wpart = wpart_tmp + " " + faOrder
+				faOrder = faBigNum[m] + faOrder
 			}
 		}
-		wparts = append(wparts, wpart)
+		var w_part string
+		if i == 1 && p == 1 {
+			w_part = faOrder
+		} else {
+			w_part_tmp, err := convert_int(p)
+			if err != nil {
+				return "", err
+			}
+			w_part = w_part_tmp + " " + faOrder
+		}
+		w_parts = append(w_parts, w_part)
 	}
-	return join_reversed(wparts, " و "), nil
+	return join_reversed(w_parts, fa_and), nil
 }
 
-func ConvertString(st string) (string, error) {
-	if len(st) > 3 {
-		return convertStringLarge(st)
+func ConvertString(str string) (string, error) {
+	if len(str) > 3 {
+		return convertStringLarge(str)
 	}
 	// now assume that n <= 999
-	n_i64, err := strconv.ParseInt(st, 10, 64)
+	n_i64, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
 		panic(err)
 	}
@@ -163,35 +180,35 @@ func ConvertString(st string) (string, error) {
 	if _, ok := faBaseNum[n]; ok {
 		return faBaseNum[n], nil
 	}
-	y := n % 10
-	d := int((n % 100) / 10)
-	s := int(n / 100)
-	dy := 10*d + y
-	fa := ""
-	if s != 0 {
-		if _, ok := faBaseNum[s*100]; ok {
-			fa += faBaseNum[s*100]
+	yekan := n % 10
+	dahgan := int((n % 100) / 10)
+	sadgan := int(n / 100)
+	dahgan_yekan := 10*dahgan + yekan
+	result := ""
+	if sadgan != 0 {
+		if _, ok := faBaseNum[sadgan*100]; ok {
+			result += faBaseNum[sadgan*100]
 		} else {
-			fa += faBaseNum[s] + faBaseNum[100]
+			result += faBaseNum[sadgan] + faBaseNum[100]
 		}
-		if d != 0 || y != 0 {
-			fa += " و "
-		}
-	}
-	if d != 0 {
-		if _, ok := faBaseNum[dy]; ok {
-			fa += faBaseNum[dy]
-			return fa, nil
-		}
-		fa += faBaseNum[d*10]
-		if y != 0 {
-			fa += " و "
+		if dahgan != 0 || yekan != 0 {
+			result += fa_and
 		}
 	}
-	if y != 0 {
-		fa += faBaseNum[y]
+	if dahgan != 0 {
+		if _, ok := faBaseNum[dahgan_yekan]; ok {
+			result += faBaseNum[dahgan_yekan]
+			return result, nil
+		}
+		result += faBaseNum[dahgan*10]
+		if yekan != 0 {
+			result += fa_and
+		}
 	}
-	return fa, nil
+	if yekan != 0 {
+		result += faBaseNum[yekan]
+	}
+	return result, nil
 }
 
 func ConvertOrdinalString(str string) (string, error) {
