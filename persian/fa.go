@@ -90,10 +90,10 @@ func join_reversed(parts []string, sep string) string {
 }
 
 func convert_int(num int) string {
-	return Convert(strconv.FormatUint(uint64(num), 10))
+	return ConvertString(strconv.FormatUint(uint64(num), 10))
 }
 
-func Convert(st string) string {
+func ConvertString(st string) string {
 	if len(st) > 3 {
 		parts := split3(st)
 		k := len(parts)
@@ -186,7 +186,7 @@ func ConvertOrdinalString(str string) string {
 	if str == "10" {
 		return "دهم"
 	}
-	norm_fa := Convert(str)
+	norm_fa := ConvertString(str)
 	if norm_fa == "" {
 		return ""
 	}
