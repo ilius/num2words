@@ -58,7 +58,7 @@ var faBigNumIran = append(faBigNumFirst, "میلیارد", "تریلیون")
 
 var faBigNum = faBigNumIran
 
-func split3(st string) []int {
+func split3(st string) ([]int, error) {
 	n := len(st)
 	d := n / 3
 	m := n % 3
@@ -66,18 +66,18 @@ func split3(st string) []int {
 	for i := range d {
 		p_int, err := strconv.ParseInt(st[n-3*i-3:n-3*i], 10, 64)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		parts[i] = int(p_int)
 	}
 	if m > 0 {
 		p_int, err := strconv.ParseInt(st[:m], 10, 64)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		parts = append(parts, int(p_int))
 	}
-	return parts
+	return parts, nil
 }
 
 func join_reversed(parts []string, sep string) string {
@@ -89,13 +89,16 @@ func join_reversed(parts []string, sep string) string {
 	return strings.Join(r_parts, sep)
 }
 
-func convert_int(num int) string {
+func convert_int(num int) (string, error) {
 	return ConvertString(strconv.FormatUint(uint64(num), 10))
 }
 
-func ConvertString(st string) string {
+func ConvertString(st string) (string, error) {
 	if len(st) > 3 {
-		parts := split3(st)
+		parts, err := split3(st)
+		if err != nil {
+			return "", err
+		}
 		k := len(parts)
 		wparts := []string{}
 		for i := range k {
@@ -106,7 +109,11 @@ func ConvertString(st string) string {
 			}
 			var wpart string
 			if i == 0 {
-				wpart = convert_int(p)
+				var err error
+				wpart, err = convert_int(p)
+				if err != nil {
+					return "", err
+				}
 			} else {
 				if i < len(faBigNum) {
 					faOrder = faBigNum[i]
@@ -131,12 +138,16 @@ func ConvertString(st string) string {
 				if i == 1 && p == 1 {
 					wpart = faOrder
 				} else {
-					wpart = convert_int(p) + " " + faOrder
+					wpart_tmp, err := convert_int(p)
+					if err != nil {
+						return "", err
+					}
+					wpart = wpart_tmp + " " + faOrder
 				}
 			}
 			wparts = append(wparts, wpart)
 		}
-		return join_reversed(wparts, " و ")
+		return join_reversed(wparts, " و "), nil
 	}
 	// now assume that n <= 999
 	n_i64, err := strconv.ParseInt(st, 10, 64)
@@ -145,7 +156,7 @@ func ConvertString(st string) string {
 	}
 	n := int(n_i64)
 	if _, ok := faBaseNum[n]; ok {
-		return faBaseNum[n]
+		return faBaseNum[n], nil
 	}
 	y := n % 10
 	d := int((n % 100) / 10)
@@ -166,7 +177,7 @@ func ConvertString(st string) string {
 	if d != 0 {
 		if _, ok := faBaseNum[dy]; ok {
 			fa += faBaseNum[dy]
-			return fa
+			return fa, nil
 		}
 		fa += faBaseNum[d*10]
 		if y != 0 {
@@ -176,19 +187,19 @@ func ConvertString(st string) string {
 	if y != 0 {
 		fa += faBaseNum[y]
 	}
-	return fa
+	return fa, nil
 }
 
-func ConvertOrdinalString(str string) string {
+func ConvertOrdinalString(str string) (string, error) {
 	if str == "1" {
-		return "اول" // or "یکم"
+		return "اول", nil // or "یکم"
 	}
 	if str == "10" {
-		return "دهم"
+		return "دهم", nil
 	}
-	norm_fa := ConvertString(str)
-	if norm_fa == "" {
-		return ""
+	norm_fa, err := ConvertString(str)
+	if err != nil {
+		return "", err
 	}
 	if strings.HasSuffix(norm_fa, "ی") {
 		norm_fa += "\u200cام"
@@ -197,5 +208,5 @@ func ConvertOrdinalString(str string) string {
 	} else {
 		norm_fa += "م"
 	}
-	return norm_fa
+	return norm_fa, nil
 }
