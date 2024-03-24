@@ -93,61 +93,66 @@ func convert_int(num int) (string, error) {
 	return ConvertString(strconv.FormatUint(uint64(num), 10))
 }
 
-func ConvertString(st string) (string, error) {
-	if len(st) > 3 {
-		parts, err := split3(st)
-		if err != nil {
-			return "", err
+// only for len(st) > 3
+func convertStringLarge(st string) (string, error) {
+	parts, err := split3(st)
+	if err != nil {
+		return "", err
+	}
+	k := len(parts)
+	wparts := []string{}
+	for i := range k {
+		faOrder := ""
+		p := parts[i]
+		if p == 0 {
+			continue
 		}
-		k := len(parts)
-		wparts := []string{}
-		for i := range k {
-			faOrder := ""
-			p := parts[i]
-			if p == 0 {
-				continue
+		var wpart string
+		if i == 0 {
+			var err error
+			wpart, err = convert_int(p)
+			if err != nil {
+				return "", err
 			}
-			var wpart string
-			if i == 0 {
-				var err error
-				wpart, err = convert_int(p)
+		} else {
+			if i < len(faBigNum) {
+				faOrder = faBigNum[i]
+			} else {
+				faOrder = ""
+				d := i / 3
+				m := i % 3
+				t9 := faBigNum[3]
+				for j := range d {
+					if j > 0 {
+						faOrder += "\u200c"
+					}
+					faOrder += t9
+				}
+				if m != 0 {
+					if faOrder != "" {
+						faOrder = "\u200c" + faOrder
+					}
+					faOrder = faBigNum[m] + faOrder
+				}
+			}
+			if i == 1 && p == 1 {
+				wpart = faOrder
+			} else {
+				wpart_tmp, err := convert_int(p)
 				if err != nil {
 					return "", err
 				}
-			} else {
-				if i < len(faBigNum) {
-					faOrder = faBigNum[i]
-				} else {
-					faOrder = ""
-					d := i / 3
-					m := i % 3
-					t9 := faBigNum[3]
-					for j := range d {
-						if j > 0 {
-							faOrder += "\u200c"
-						}
-						faOrder += t9
-					}
-					if m != 0 {
-						if faOrder != "" {
-							faOrder = "\u200c" + faOrder
-						}
-						faOrder = faBigNum[m] + faOrder
-					}
-				}
-				if i == 1 && p == 1 {
-					wpart = faOrder
-				} else {
-					wpart_tmp, err := convert_int(p)
-					if err != nil {
-						return "", err
-					}
-					wpart = wpart_tmp + " " + faOrder
-				}
+				wpart = wpart_tmp + " " + faOrder
 			}
-			wparts = append(wparts, wpart)
 		}
-		return join_reversed(wparts, " و "), nil
+		wparts = append(wparts, wpart)
+	}
+	return join_reversed(wparts, " و "), nil
+}
+
+func ConvertString(st string) (string, error) {
+	if len(st) > 3 {
+		return convertStringLarge(st)
 	}
 	// now assume that n <= 999
 	n_i64, err := strconv.ParseInt(st, 10, 64)
@@ -161,7 +166,6 @@ func ConvertString(st string) (string, error) {
 	y := n % 10
 	d := int((n % 100) / 10)
 	s := int(n / 100)
-	// print s, d, y
 	dy := 10*d + y
 	fa := ""
 	if s != 0 {
