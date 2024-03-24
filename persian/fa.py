@@ -144,7 +144,7 @@ def convert(st):
 	return fa
 
 
-def convert_ordinary(arg):
+def convert_ordinal(arg):
 	if isinstance(arg, int):
 		num = arg
 		st = str(arg)
@@ -177,4 +177,4 @@ if __name__ == "__main__":
 		except ValueError:  # noqa: PERF203
 			print(f"{arg}: non-numeric argument")
 		else:
-			print(f"{k:,}\n{convert(k)}\n{convert_ordinary(k)}\n")
+			print(f"{k:,}\n{convert(k)}\n{convert_ordinal(k)}\n")
