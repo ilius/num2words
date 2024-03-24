@@ -42,16 +42,16 @@ var faBaseNum = map[int]string{
 var faBigNumFirst = []string{"یک", "هزار", "میلیون"}
 
 // European
-var faBigNumEU = append(faBigNumFirst, "میلیارد", "بیلیون", "بیلیارد", "تریلیون", "تریلیارد")
+// var faBigNumEU = append(faBigNumFirst, "میلیارد", "بیلیون", "بیلیارد", "تریلیون", "تریلیارد")
 
 // American
-var faBigNumUS = append(faBigNumFirst,
-	"بیلیون",
-	"تریلیون",
-	"کوآدریلیون",
-	"کوینتیلیون",
-	"سکستیلیون",
-)
+// var faBigNumUS = append(faBigNumFirst,
+// 	"بیلیون",
+// 	"تریلیون",
+// 	"کوآدریلیون",
+// 	"کوینتیلیون",
+// 	"سکستیلیون",
+// )
 
 // Common in Iran (the rest are uncommon or mistaken)
 var faBigNumIran = append(faBigNumFirst, "میلیارد", "تریلیون")
@@ -117,13 +117,13 @@ func ConvertString(st string) string {
 					t9 := faBigNum[3]
 					for j := range d {
 						if j > 0 {
-							faOrder += "‌"
+							faOrder += "\u200c"
 						}
 						faOrder += t9
 					}
 					if m != 0 {
 						if faOrder != "" {
-							faOrder = "‌" + faOrder
+							faOrder = "\u200c" + faOrder
 						}
 						faOrder = faBigNum[m] + faOrder
 					}
