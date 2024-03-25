@@ -75,24 +75,24 @@ var faBigNumIran = append(
 
 var faBigNum = faBigNumIran
 
-func split3(st string) ([]int, error) {
+func split3(st string) ([]uint16, error) {
 	n := len(st)
 	d := n / 3
 	m := n % 3
-	parts := make([]int, d)
+	parts := make([]uint16, d)
 	for i := range d {
-		p_int, err := strconv.ParseInt(st[n-3*i-3:n-3*i], 10, 64)
+		p_int, err := strconv.ParseUint(st[n-3*i-3:n-3*i], 10, 64)
 		if err != nil {
 			return nil, err
 		}
-		parts[i] = int(p_int)
+		parts[i] = uint16(p_int)
 	}
 	if m > 0 {
-		p_int, err := strconv.ParseInt(st[:m], 10, 64)
+		p_int, err := strconv.ParseUint(st[:m], 10, 64)
 		if err != nil {
 			return nil, err
 		}
-		parts = append(parts, int(p_int))
+		parts = append(parts, uint16(p_int))
 	}
 	return parts, nil
 }
@@ -106,16 +106,11 @@ func join_reversed(parts []string, sep string) string {
 	return strings.Join(r_parts, sep)
 }
 
-func convert_int(num int) (string, error) {
-	return ConvertString(strconv.FormatUint(uint64(num), 10))
+func convert_int(num uint64) (string, error) {
+	return ConvertString(strconv.FormatUint(num, 10))
 }
 
-// only for len(st) > 3
-func convertStringLarge(str string) (string, error) {
-	parts, err := split3(str)
-	if err != nil {
-		return "", err
-	}
+func convertStringLarge(parts []uint16) (string, error) {
 	k := len(parts)
 	w_parts := []string{}
 	for i := range k {
@@ -124,7 +119,7 @@ func convertStringLarge(str string) (string, error) {
 			continue
 		}
 		if i == 0 {
-			w_part, err := convert_int(p)
+			w_part, err := convert_int(uint64(p))
 			if err != nil {
 				return "", err
 			}
@@ -156,7 +151,7 @@ func convertStringLarge(str string) (string, error) {
 		if i == 1 && p == 1 {
 			w_part = faOrder
 		} else {
-			w_part_tmp, err := convert_int(p)
+			w_part_tmp, err := convert_int(uint64(p))
 			if err != nil {
 				return "", err
 			}
@@ -165,14 +160,19 @@ func convertStringLarge(str string) (string, error) {
 		w_parts = append(w_parts, w_part)
 	}
 	return join_reversed(w_parts, fa_and), nil
+
 }
 
 func ConvertString(str string) (string, error) {
 	if len(str) > 3 {
-		return convertStringLarge(str)
+		parts, err := split3(str)
+		if err != nil {
+			return "", err
+		}
+		return convertStringLarge(parts)
 	}
 	// now assume that n <= 999
-	n_i64, err := strconv.ParseInt(str, 10, 64)
+	n_i64, err := strconv.ParseUint(str, 10, 64)
 	if err != nil {
 		panic(err)
 	}
