@@ -63,7 +63,12 @@ func TestConvertBigInt(t *testing.T) {
 		bn := &big.Int{}
 		bn.SetString(num_str, 10)
 		is.Equal(persian.ConvertBigInt(bn), words_expected)
+	}
+}
 
+func TestConvertBigIntSigned(t *testing.T) {
+	is := is.New(t)
+	for num_str, words_expected := range testData {
 		bn_neg := &big.Int{}
 		bn_neg.SetString(num_str, 10)
 		bn_neg.Neg(bn_neg)
