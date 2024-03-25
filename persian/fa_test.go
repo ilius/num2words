@@ -20,6 +20,7 @@ func loadTestData() map[string]string {
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
 	zfile, err := gzip.NewReader(file)
 	if err != nil {
 		panic(err)
