@@ -163,20 +163,8 @@ func convertStringLarge(parts []uint16) (string, error) {
 
 }
 
-func ConvertString(str string) (string, error) {
-	if len(str) > 3 {
-		parts, err := split3(str)
-		if err != nil {
-			return "", err
-		}
-		return convertStringLarge(parts)
-	}
-	// now assume that n <= 999
-	n_i64, err := strconv.ParseUint(str, 10, 64)
-	if err != nil {
-		panic(err)
-	}
-	n := int(n_i64)
+// n < 1000
+func convertStringSmall(n int) (string, error) {
 	if _, ok := faBaseNum[n]; ok {
 		return faBaseNum[n], nil
 	}
@@ -209,6 +197,22 @@ func ConvertString(str string) (string, error) {
 		result += faBaseNum[yekan]
 	}
 	return result, nil
+}
+
+func ConvertString(str string) (string, error) {
+	if len(str) > 3 {
+		parts, err := split3(str)
+		if err != nil {
+			return "", err
+		}
+		return convertStringLarge(parts)
+	}
+	// now assume that n <= 999
+	n_i64, err := strconv.ParseUint(str, 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	return convertStringSmall(int(n_i64))
 }
 
 func ConvertOrdinalString(str string) (string, error) {
