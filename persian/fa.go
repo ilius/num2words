@@ -1,6 +1,7 @@
 package persian
 
 import (
+	"math/big"
 	"strconv"
 	"strings"
 )
@@ -76,23 +77,58 @@ var faBigNumIran = append(
 var faBigNum = faBigNumIran
 
 func split3(st string) ([]uint16, error) {
-	n := len(st)
-	d := n / 3
-	m := n % 3
-	parts := make([]uint16, d)
-	for i := range d {
-		p_int, err := strconv.ParseUint(st[n-3*i-3:n-3*i], 10, 64)
+	digitCount := len(st)
+	partCount := digitCount / 3
+	parts := make([]uint16, partCount)
+	for i := range partCount {
+		p_int, err := strconv.ParseUint(st[digitCount-3*i-3:digitCount-3*i], 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		parts[i] = uint16(p_int)
 	}
+	m := digitCount % 3
 	if m > 0 {
 		p_int, err := strconv.ParseUint(st[:m], 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		parts = append(parts, uint16(p_int))
+	}
+	return parts, nil
+}
+
+func bigIntCountDigits(bnBytes []byte) int {
+	bn := &big.Int{}
+	bn.SetBytes(bnBytes)
+	zero := big.NewInt(0)
+	if bn.Cmp(zero) == 0 {
+		return 1
+	}
+	ten := big.NewInt(10)
+	count := 0
+	for bn.Cmp(zero) != 0 {
+		bn.Div(bn, ten)
+		count++
+	}
+	return count
+}
+
+func split3BigInt(bn *big.Int, digitCount int) ([]uint16, error) {
+
+	partCount := digitCount / 3
+	parts := make([]uint16, partCount)
+	thausand := big.NewInt(1000)
+	for i := range partCount {
+		mod := &big.Int{}
+		div := &big.Int{}
+		div.DivMod(bn, thausand, mod)
+		parts[i] = uint16(mod.Uint64())
+		bn = div
+	}
+	m := digitCount % 3
+	if m > 0 {
+		parts = append(parts, uint16(bn.Uint64()))
 	}
 	return parts, nil
 }
@@ -234,4 +270,17 @@ func ConvertOrdinalString(str string) (string, error) {
 		norm_fa += "م"
 	}
 	return norm_fa, nil
+}
+
+func ConvertBigInt(bn *big.Int) (string, error) {
+	digitCount := bigIntCountDigits(bn.Bytes())
+	if digitCount > 3 {
+		parts, err := split3BigInt(bn, digitCount)
+		if err != nil {
+			return "", err
+		}
+		return convertStringLarge(parts)
+	}
+	// now assume that n <= 999
+	return convertStringSmall(int(bn.Int64()))
 }

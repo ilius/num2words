@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"compress/gzip"
 	"log"
+	"math/big"
 	"os"
 	"strings"
 	"testing"
@@ -29,15 +30,31 @@ func TestGeneratedData(t *testing.T) {
 		}
 		num_str := parts[0]
 		words_expected := parts[1]
-		words, err := persian.ConvertString(num_str)
-		if err != nil {
-			log.Fatal(err)
+		{
+			words, err := persian.ConvertString(num_str)
+			if err != nil {
+				log.Fatal(err)
+			}
+			if words != words_expected {
+				log.Fatalf(
+					"test failed: num=%v, expected: %#v, actual: %#v",
+					num_str, words_expected, words,
+				)
+			}
 		}
-		if words != words_expected {
-			log.Fatalf(
-				"test failed: num=%v, expected: %#v, actual: %#v",
-				num_str, words_expected, words,
-			)
+		{
+			bn := &big.Int{}
+			bn.SetString(num_str, 10)
+			words, err := persian.ConvertBigInt(bn)
+			if err != nil {
+				log.Fatal(err)
+			}
+			if words != words_expected {
+				log.Fatalf(
+					"test failed: num=%v, expected: %#v, actual: %#v",
+					num_str, words_expected, words,
+				)
+			}
 		}
 		// log.Println(num_str)
 	}
