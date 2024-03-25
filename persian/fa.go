@@ -6,6 +6,12 @@ import (
 	"strings"
 )
 
+var (
+	big_zero     = big.NewInt(0)
+	big_ten      = big.NewInt(10)
+	big_thausand = big.NewInt(1000)
+)
+
 const (
 	fa_and = " و "
 	zwnj   = "\u200c"
@@ -101,28 +107,24 @@ func split3(st string) ([]uint16, error) {
 func bigIntCountDigits(bnBytes []byte) int {
 	bn := &big.Int{}
 	bn.SetBytes(bnBytes)
-	zero := big.NewInt(0)
-	if bn.Cmp(zero) == 0 {
+	if bn.Cmp(big_zero) == 0 {
 		return 1
 	}
-	ten := big.NewInt(10)
 	count := 0
-	for bn.Cmp(zero) != 0 {
-		bn.Div(bn, ten)
+	for bn.Cmp(big_zero) != 0 {
+		bn.Div(bn, big_ten)
 		count++
 	}
 	return count
 }
 
 func split3BigInt(bn *big.Int, digitCount int) ([]uint16, error) {
-
 	partCount := digitCount / 3
 	parts := make([]uint16, partCount)
-	thausand := big.NewInt(1000)
 	for i := range partCount {
 		mod := &big.Int{}
 		div := &big.Int{}
-		div.DivMod(bn, thausand, mod)
+		div.DivMod(bn, big_thausand, mod)
 		parts[i] = uint16(mod.Uint64())
 		bn = div
 	}
@@ -196,7 +198,6 @@ func convertStringLarge(parts []uint16) (string, error) {
 		w_parts = append(w_parts, w_part)
 	}
 	return join_reversed(w_parts, fa_and), nil
-
 }
 
 // n < 1000
