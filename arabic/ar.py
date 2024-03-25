@@ -389,6 +389,10 @@ class number2word:
 		return returnmsg
 
 
+def convert(st: str) -> str:
+	return number2word(int(st)).to_string()
+
+
 for arg in sys.argv[1:]:
 	number = int(arg)
 	num = number2word(number)
