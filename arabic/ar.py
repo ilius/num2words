@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Copyright (c) 2024 Saeed Rasooli
+# Copyright (c) 2017 ahmadRagheb
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and contributors
-# For license information, please see license.txt
+# For license information, please see LICENSE
+
+# Based on https://github.com/ahmadRagheb/number2word-Arabic
 
 import locale
 import sys
@@ -178,7 +182,7 @@ class number2word:
 	def __init__(self, number):
 		self.number = number
 
-	def validate(self):
+	def to_string(self):
 		returnmsg = ""
 		# // convert number into array of(string) number each case
 		# // -------number: 121210002876 - ---------- //
@@ -199,7 +203,7 @@ class number2word:
 			# if array_number[i+1] and array_number[i+1] > 0:
 			if 0 <= i < len(array_number) - 1:
 				returnmsg = returnmsg + " و "
-		print(returnmsg)
+		return returnmsg.strip()
 
 	@staticmethod
 	def convert_number(number):
@@ -219,15 +223,20 @@ class number2word:
 		returnmsg = ""
 
 		# sex = "male"
-		# // the number word in arabic for masculine and feminine
+		# the number word in arabic for masculine and feminine
 
-		# //take in charge the different way of writing the thousands and millions ...
+		# take in charge the different way of writing the thousands and millions ...
 		# mil = list[
 		#     '2' : list['1' : 'ألف', '2' : 'ألفان', '3' : 'آلاف'],
 		#     '3' : list['1' : 'مليون', '2' : 'مليونان', '3' : 'ملايين'],
 		#     '4' : list['1' : 'مليار', '2' : 'ملياران', '3' : 'مليارات'] ]
 
-		mf = {"1": "male", "2": "male", "3": "male", "4": "male"}
+		mf = {
+			"1": "male",
+			"2": "male",
+			"3": "male",
+			"4": "male",
+		}
 		number_length = len(str(number))
 
 		# we are dealing with 3 digits number in each loop the main method calls convert
@@ -332,7 +341,7 @@ class number2word:
 					twoyony = " ملياران"
 
 				if int(threey) != 0:
-					twoyony = "و" + str(twoyony)
+					twoyony = "و " + str(twoyony)
 
 				returnmsg = returnmsg + " " + twoyony
 
@@ -348,7 +357,7 @@ class number2word:
 					twoyony = "مليار"
 
 				if int(threey) != 0:
-					twoyony = "و" + str(twoyony)
+					twoyony = "و " + str(twoyony)
 
 				returnmsg = returnmsg + " " + twoyony
 
@@ -363,10 +372,10 @@ class number2word:
 					twoy = str(twoy)
 					ony = number[2]
 					twoyony = (
-						words[mf[str(place)]][ony] + " و" + words[mf[str(place)]][twoy]
+						words[mf[str(place)]][ony] + " و " + words[mf[str(place)]][twoy]
 					)
 				if twoyony and int(threey) != 0:
-					returnmsg = returnmsg + " و" + twoyony
+					returnmsg = returnmsg + " و " + twoyony
 				else:
 					returnmsg = returnmsg + " " + twoyony
 
@@ -382,5 +391,5 @@ class number2word:
 
 for arg in sys.argv[1:]:
 	number = int(arg)
-	numb = number2word(number)
-	numb.validate()
+	num = number2word(number)
+	print(num.to_string())
