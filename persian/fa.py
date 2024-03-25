@@ -16,6 +16,8 @@
 
 import sys
 
+fa_zero = "صفر"
+
 faBaseNum = {
 	1: "یک",
 	2: "دو",
@@ -86,6 +88,8 @@ def convert(st):
 		st = str(st)
 	elif not isinstance(st, str):
 		raise TypeError("bad type {type(st)!r}")
+	if st == "0":
+		return fa_zero
 	if len(st) > 3:
 		parts = split3(st)
 		k = len(parts)

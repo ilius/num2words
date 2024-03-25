@@ -7,6 +7,7 @@ from fa import convert
 # my select of prime numbers: 7, 71, 719, 7121, 71171, 711121, 7113221
 
 with gzip.open("test-data.gz", "wt", encoding="utf-8") as _file:
+
 	def add(n: int):
 		n_st = str(n)
 		w_st = convert(n_st)
@@ -38,8 +39,3 @@ with gzip.open("test-data.gz", "wt", encoding="utf-8") as _file:
 		add(n * 1_001_001_001_001)
 	for n in range(1000, 10_000, 71):
 		add(n * 1_001_001_001_001_001)
-
-
-
-
-

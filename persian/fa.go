@@ -8,16 +8,21 @@ import (
 
 var (
 	big_zero     = big.NewInt(0)
+	big_one      = big.NewInt(1)
 	big_ten      = big.NewInt(10)
 	big_thausand = big.NewInt(1000)
 )
 
 const (
-	fa_and = " و "
-	zwnj   = "\u200c"
+	zwnj     = "\u200c"
+	fa_and   = " و "
+	fa_zero  = "صفر"
+	fa_first = "اول" // or "یکم"
+	fa_tenth = "دهم"
 )
 
-var faBaseNum = map[int]string{
+var small_words = map[uint16]string{
+	0:   fa_zero,
 	1:   "یک",
 	2:   "دو",
 	3:   "سه",
@@ -51,11 +56,11 @@ var faBaseNum = map[int]string{
 	500: "پانصد",
 }
 
-var faBigNumFirst = []string{"یک", "هزار", "میلیون"}
+var big_words_first = []string{"یک", "هزار", "میلیون"}
 
 // European
-// var faBigNumEU = append(
-// 	faBigNumFirst,
+// var big_words_europe = append(
+// 	big_words_first,
 // 	"میلیارد",
 // 	"بیلیون",
 // 	"بیلیارد",
@@ -64,8 +69,8 @@ var faBigNumFirst = []string{"یک", "هزار", "میلیون"}
 // )
 
 // American
-// var faBigNumUS = append(
-// 	faBigNumFirst,
+// var big_words_US = append(
+// 	big_words_first,
 // 	"بیلیون",
 // 	"تریلیون",
 // 	"کوآدریلیون",
@@ -74,24 +79,22 @@ var faBigNumFirst = []string{"یک", "هزار", "میلیون"}
 // )
 
 // Common in Iran (the rest are uncommon or mistaken)
-var faBigNumIran = append(
-	faBigNumFirst,
+var big_words = append(
+	big_words_first,
 	"میلیارد",
 	"تریلیون",
 )
 
-var faBigNum = faBigNumIran
-
-func split3(st string) ([]uint16, error) {
+func splitGroups(st string) ([]uint16, error) {
 	digitCount := len(st)
-	partCount := digitCount / 3
-	parts := make([]uint16, partCount)
-	for i := range partCount {
+	groupCount := digitCount / 3
+	groups := make([]uint16, groupCount)
+	for i := range groupCount {
 		p_int, err := strconv.ParseUint(st[digitCount-3*i-3:digitCount-3*i], 10, 64)
 		if err != nil {
 			return nil, err
 		}
-		parts[i] = uint16(p_int)
+		groups[i] = uint16(p_int)
 	}
 	m := digitCount % 3
 	if m > 0 {
@@ -99,9 +102,9 @@ func split3(st string) ([]uint16, error) {
 		if err != nil {
 			return nil, err
 		}
-		parts = append(parts, uint16(p_int))
+		groups = append(groups, uint16(p_int))
 	}
-	return parts, nil
+	return groups, nil
 }
 
 func bigIntCountDigits(bnBytes []byte) int {
@@ -118,170 +121,186 @@ func bigIntCountDigits(bnBytes []byte) int {
 	return count
 }
 
-func split3BigInt(bn *big.Int, digitCount int) ([]uint16, error) {
-	partCount := digitCount / 3
-	parts := make([]uint16, partCount)
-	for i := range partCount {
+func splitGroupsBigInt(bn *big.Int, digitCount int) []uint16 {
+	groupCount := digitCount / 3
+	groups := make([]uint16, groupCount)
+	for i := range groupCount {
 		mod := &big.Int{}
 		div := &big.Int{}
 		div.DivMod(bn, big_thausand, mod)
-		parts[i] = uint16(mod.Uint64())
+		groups[i] = uint16(mod.Uint64())
 		bn = div
 	}
 	m := digitCount % 3
 	if m > 0 {
-		parts = append(parts, uint16(bn.Uint64()))
+		groups = append(groups, uint16(bn.Uint64()))
 	}
-	return parts, nil
+	return groups
 }
 
-func join_reversed(parts []string, sep string) string {
-	r_parts := make([]string, len(parts))
-	n := len(parts)
+func joinReversed(groups []string, sep string) string {
+	r_groups := make([]string, len(groups))
+	n := len(groups)
 	for i := range n {
-		r_parts[n-i-1] = parts[i]
+		r_groups[n-i-1] = groups[i]
 	}
-	return strings.Join(r_parts, sep)
+	return strings.Join(r_groups, sep)
 }
 
-func convert_int(num uint64) (string, error) {
-	return ConvertString(strconv.FormatUint(num, 10))
-}
-
-func convertStringLarge(parts []uint16) (string, error) {
-	k := len(parts)
-	w_parts := []string{}
+func convertLarge(groups []uint16) string {
+	k := len(groups)
+	w_groups := []string{}
 	for i := range k {
-		p := parts[i]
+		p := groups[i]
 		if p == 0 {
 			continue
 		}
 		if i == 0 {
-			w_part, err := convert_int(uint64(p))
-			if err != nil {
-				return "", err
-			}
-			w_parts = append(w_parts, w_part)
+			w_groups = append(w_groups, convertSmall(p))
 			continue
 		}
-		faOrder := ""
-		if i < len(faBigNum) {
-			faOrder = faBigNum[i]
+		order := ""
+		if i < len(big_words) {
+			order = big_words[i]
 		} else {
-			faOrder = ""
+			order = ""
 			d := i / 3
 			m := i % 3
-			t9 := faBigNum[3]
+			t9 := big_words[3]
 			for j := range d {
 				if j > 0 {
-					faOrder += zwnj
+					order += zwnj
 				}
-				faOrder += t9
+				order += t9
 			}
 			if m != 0 {
-				if faOrder != "" {
-					faOrder = zwnj + faOrder
+				if order != "" {
+					order = zwnj + order
 				}
-				faOrder = faBigNum[m] + faOrder
+				order = big_words[m] + order
 			}
 		}
-		var w_part string
+		var w_group string
 		if i == 1 && p == 1 {
-			w_part = faOrder
+			w_group = order
 		} else {
-			w_part_tmp, err := convert_int(uint64(p))
-			if err != nil {
-				return "", err
-			}
-			w_part = w_part_tmp + " " + faOrder
+			w_group = convertSmall(p) + " " + order
 		}
-		w_parts = append(w_parts, w_part)
+		w_groups = append(w_groups, w_group)
 	}
-	return join_reversed(w_parts, fa_and), nil
+	return joinReversed(w_groups, fa_and)
 }
 
-// n < 1000
-func convertStringSmall(n int) (string, error) {
-	if _, ok := faBaseNum[n]; ok {
-		return faBaseNum[n], nil
+// num < 1000
+func convertSmall(num uint16) string {
+	{
+		word, ok := small_words[num]
+		if ok {
+			return word
+		}
 	}
-	yekan := n % 10
-	dahgan := int((n % 100) / 10)
-	sadgan := int(n / 100)
-	dahgan_yekan := 10*dahgan + yekan
+	ones := num % 10
+	tens := (num % 100) / 10
+	hundreds := num / 100
+	ones_tens := 10*tens + ones
 	result := ""
-	if sadgan != 0 {
-		if _, ok := faBaseNum[sadgan*100]; ok {
-			result += faBaseNum[sadgan*100]
+	if hundreds != 0 {
+		word, ok := small_words[hundreds*100]
+		if ok {
+			result += word
 		} else {
-			result += faBaseNum[sadgan] + faBaseNum[100]
+			result += small_words[hundreds] + small_words[100]
 		}
-		if dahgan != 0 || yekan != 0 {
+		if tens != 0 || ones != 0 {
 			result += fa_and
 		}
 	}
-	if dahgan != 0 {
-		if _, ok := faBaseNum[dahgan_yekan]; ok {
-			result += faBaseNum[dahgan_yekan]
-			return result, nil
+	if tens != 0 {
+		word, ok := small_words[ones_tens]
+		if ok {
+			result += word
+			return result // OK, Done
 		}
-		result += faBaseNum[dahgan*10]
-		if yekan != 0 {
+		result += small_words[tens*10]
+		if ones != 0 {
 			result += fa_and
 		}
 	}
-	if yekan != 0 {
-		result += faBaseNum[yekan]
+	if ones != 0 {
+		result += small_words[ones]
 	}
-	return result, nil
+	return result
 }
 
+// ConvertString: only for non-negative integers
 func ConvertString(str string) (string, error) {
 	if len(str) > 3 {
-		parts, err := split3(str)
+		groups, err := splitGroups(str)
 		if err != nil {
 			return "", err
 		}
-		return convertStringLarge(parts)
+		return convertLarge(groups), nil
 	}
 	// now assume that n <= 999
 	n_i64, err := strconv.ParseUint(str, 10, 64)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	return convertStringSmall(int(n_i64))
+	return convertSmall(uint16(n_i64)), nil
+}
+
+// ConvertBigInt: only for non-negative integers
+func ConvertBigInt(bn *big.Int) string {
+	digitCount := bigIntCountDigits(bn.Bytes())
+	if digitCount > 3 {
+		return convertLarge(splitGroupsBigInt(bn, digitCount))
+	}
+	// now assume that bn <= 999
+	return convertSmall(uint16(bn.Uint64()))
+}
+
+func ConvertBigIntSigned(bn *big.Int) string {
+	if bn.Cmp(big_zero) < 0 {
+		return "منفی " + ConvertBigInt(bn.Abs(bn))
+	}
+	return ConvertBigInt(bn)
 }
 
 func ConvertOrdinalString(str string) (string, error) {
 	if str == "1" {
-		return "اول", nil // or "یکم"
+		return fa_first, nil
 	}
 	if str == "10" {
-		return "دهم", nil
+		return fa_tenth, nil
 	}
-	norm_fa, err := ConvertString(str)
+	result, err := ConvertString(str)
 	if err != nil {
 		return "", err
 	}
-	if strings.HasSuffix(norm_fa, "ی") {
-		norm_fa += "\u200cام"
-	} else if strings.HasSuffix(norm_fa, "سه") {
-		norm_fa = norm_fa[:len(norm_fa)-1] + "وم"
+	if strings.HasSuffix(result, "ی") {
+		result += "\u200cام"
+	} else if strings.HasSuffix(result, "سه") {
+		result = result[:len(result)-1] + "وم"
 	} else {
-		norm_fa += "م"
+		result += "م"
 	}
-	return norm_fa, nil
+	return result, nil
 }
 
-func ConvertBigInt(bn *big.Int) (string, error) {
-	digitCount := bigIntCountDigits(bn.Bytes())
-	if digitCount > 3 {
-		parts, err := split3BigInt(bn, digitCount)
-		if err != nil {
-			return "", err
-		}
-		return convertStringLarge(parts)
+func ConvertOrdinalBigInt(bn *big.Int) string {
+	if bn.Cmp(big_one) == 0 {
+		return fa_first
 	}
-	// now assume that n <= 999
-	return convertStringSmall(int(bn.Int64()))
+	if bn.Cmp(big_ten) == 0 {
+		return fa_tenth
+	}
+	result := ConvertBigInt(bn)
+	if strings.HasSuffix(result, "ی") {
+		result += "\u200cام"
+	} else if strings.HasSuffix(result, "سه") {
+		result = result[:len(result)-1] + "وم"
+	} else {
+		result += "م"
+	}
+	return result
 }

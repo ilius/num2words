@@ -12,7 +12,7 @@ func Test_split3(t *testing.T) {
 	is := is.New(t).Lax()
 
 	test := func(str string, parts []uint16) {
-		actual_parts, err := split3(str)
+		actual_parts, err := splitGroups(str)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -59,10 +59,7 @@ func Test_split3BigInt(t *testing.T) {
 			log.Fatalf("failed to parse %v as big int", str)
 		}
 		// log.Println(bn.Int64())
-		actual_parts, err := split3BigInt(bn, bigIntCountDigits(bn.Bytes()))
-		if err != nil {
-			log.Fatal(err)
-		}
+		actual_parts := splitGroupsBigInt(bn, bigIntCountDigits(bn.Bytes()))
 		is.Equal(actual_parts, parts)
 	}
 
