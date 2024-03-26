@@ -18,127 +18,209 @@ const (
 	ar_zero = "صفر"
 )
 
-var small_words_masc = map[int]string{
-	1:  "واحد",
-	2:  "اثنان",
-	3:  "ثلاثة",
-	4:  "أربعة",
-	5:  "خمسة",
-	6:  "ستة",
-	7:  "سبعة",
-	8:  "ثمانية",
-	9:  "تسعة",
-	10: "عشرة",
-	11: "أحد عشر",
-	12: "اثنا عشر",
-	13: "ثلاثة عشر",
-	14: "أربعة عشر",
-	15: "خمسة عشر",
-	16: "ستة عشر",
-	17: "سبعة عشر",
-	18: "ثمانية عشر",
-	19: "تسعة عشر",
+var small_words = map[int][2]string{
+	1: {
+		"واحد",
+		"إحدى",
+	},
+	2: {
+		"اثنان",
+		"اثنتان",
+	},
+	3: {
+		"ثلاثة",
+		"ثلاث",
+	},
+	4: {
+		"أربعة",
+		"أربع",
+	},
+	5: {
+		"خمسة",
+		"خمس",
+	},
+	6: {
+		"ستة",
+		"ست",
+	},
+	7: {
+		"سبعة",
+		"سبع",
+	},
+	8: {
+		"ثمانية",
+		"ثمان",
+	},
+	9: {
+		"تسعة",
+		"تسع",
+	},
+	10: {
+		"عشرة",
+		"عشر",
+	},
+	11: {
+		"أحد عشر",
+		"إحدى عشرة",
+	},
+	12: {
+		"اثنا عشر",
+		"اثنتا عشرة",
+	},
+	13: {
+		"ثلاثة عشر",
+		"ثلاث عشرة",
+	},
+	14: {
+		"أربعة عشر",
+		"أربع عشرة",
+	},
+	15: {
+		"خمسة عشر",
+		"خمس عشرة",
+	},
+	16: {
+		"ستة عشر",
+		"ست عشرة",
+	},
+	17: {
+		"سبعة عشر",
+		"سبع عشرة",
+	},
+	18: {
+		"ثمانية عشر",
+		"ثماني عشرة",
+	},
+	19: {
+		"تسعة عشر",
+		"تسع عشرة",
+	},
+	20: {
+		"عشرون",
+		"عشرون",
+	},
+	30: {
+		"ثلاثون",
+		"ثلاثون",
+	},
+	40: {
+		"أربعون",
+		"أربعون",
+	},
+	50: {
+		"خمسون",
+		"خمسون",
+	},
+	60: {
+		"ستون",
+		"ستون",
+	},
+	70: {
+		"سبعون",
+		"سبعون",
+	},
+	80: {
+		"ثمانون",
+		"ثمانون",
+	},
+	90: {
+		"تسعون",
+		"تسعون",
+	},
+	100: {
+		"مائة",
+		"مائة",
+	},
+	200: {
+		"مئتان",
+		"مئتان",
+	},
+	300: {
+		"ثلاثمائة",
+		"ثلاثمائة",
+	},
+	400: {
+		"أربعمائة",
+		"أربعمائة",
+	},
+	500: {
+		"خمسمائة",
+		"خمسمائة",
+	},
+	600: {
+		"ستمائة",
+		"ستمائة",
+	},
+	700: {
+		"سبعمائة",
+		"سبعمائة",
+	},
+	800: {
+		"ثمانمائة",
+		"ثمانمائة",
+	},
+	900: {
+		"تسعمائة",
+		"تسعمائة",
+	},
 }
 
-var small_words_feminine = map[int]string{
-	1:  "إحدى",
-	2:  "اثنتان",
-	3:  "ثلاث",
-	4:  "أربع",
-	5:  "خمس",
-	6:  "ست",
-	7:  "سبع",
-	8:  "ثمان",
-	9:  "تسع",
-	10: "عشر",
-	11: "إحدى عشرة",
-	12: "اثنتا عشرة",
-	13: "ثلاث عشرة",
-	14: "أربع عشرة",
-	15: "خمس عشرة",
-	16: "ست عشرة",
-	17: "سبع عشرة",
-	18: "ثماني عشرة",
-	19: "تسع عشرة",
+type GroupWord struct {
+	Normal   string
+	Genitive string
+	Appended string
+	Plural   string
 }
 
-var ten_words = map[int]string{
-	20: "عشرون",
-	30: "ثلاثون",
-	40: "أربعون",
-	50: "خمسون",
-	60: "ستون",
-	70: "سبعون",
-	80: "ثمانون",
-	90: "تسعون",
-}
-
-var arabicHundreds = []string{
-	"",
-	"مائة",
-	"مئتان",
-	"ثلاثمائة",
-	"أربعمائة",
-	"خمسمائة",
-	"ستمائة",
-	"سبعمائة",
-	"ثمانمائة",
-	"تسعمائة",
-}
-
-var arabicTwos = []string{
-	"مئتان",
-	"ألفان",
-	"مليونان",
-	"ملياران",
-	"تريليونان",
-	"كوادريليونان",
-	"كوينتليونان",
-	"سكستيليونان",
-}
-
-var arabicAppendedTwos = []string{
-	"مئتا",
-	"ألفا",
-	"مليونا",
-	"مليارا",
-	"تريليونا",
-	"كوادريليونا",
-	"كوينتليونا",
-	"سكستيليونا",
-}
-
-var arabicGroup = []string{
-	"مائة",
-	"ألف",
-	"مليون",
-	"مليار",
-	"تريليون",
-	"كوادريليون",
-	"كوينتليون",
-	"سكستيليون",
-}
-
-var arabicAppendedGroup = []string{
-	"",
-	"ألفاً",
-	"مليوناً",
-	"ملياراً",
-	"تريليوناً",
-	"كوادريليوناً",
-	"كوينتليوناً",
-	"سكستيليوناً",
-}
-
-var arabicPluralGroups = []string{
-	"",
-	"آلاف",
-	"ملايين",
-	"مليارات",
-	"تريليونات",
-	"كوادريليونات",
-	"كوينتليونات",
-	"سكستيليونات",
+var group_words = []GroupWord{
+	{ // 10^2 Hundred
+		Normal:   "مائة",
+		Genitive: "مئتا",
+		Appended: "",
+		Plural:   "",
+	},
+	{ // 10^3 Thousand
+		Normal:   "ألف",
+		Genitive: "ألفا",
+		Appended: "ألفاً",
+		Plural:   "آلاف",
+	},
+	{ // 10^6 Million
+		Normal:   "مليون",
+		Genitive: "مليونا",
+		Appended: "مليوناً",
+		Plural:   "ملايين",
+	},
+	{ // 10^9 Billion
+		Normal:   "مليار",
+		Genitive: "مليارا",
+		Appended: "ملياراً",
+		Plural:   "مليارات",
+	},
+	{ // 10^12 Trillion
+		Normal:   "تريليون",
+		Genitive: "تريليونا",
+		Appended: "تريليوناً",
+		Plural:   "تريليونات",
+	},
+	{ // 10^15 Quadrillion
+		Normal:   "كوادريليون",
+		Genitive: "كوادريليونا",
+		Appended: "كوادريليوناً",
+		Plural:   "كوادريليونات",
+	},
+	{ // 10^18 Quintillion
+		Normal:   "كوينتليون",
+		Genitive: "كوينتليونا",
+		Appended: "كوينتليوناً",
+		Plural:   "كوينتليونات",
+	},
+	{ // 10^21 Sextillion
+		Normal:   "سكستيليون",
+		Genitive: "سكستيليونا",
+		Appended: "سكستيليوناً",
+		Plural:   "سكستيليونات",
+	},
 }
 
 func ConvertString(number string) string {
@@ -174,7 +256,7 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 		groupNumber := int(groupNumberBig.Int64())
 
 		// convert group into its text
-		groupDescription := processArabicGroup(
+		groupDescription := processGroup(
 			groupNumber,
 			groupLevel,
 			feminine,
@@ -190,14 +272,14 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 				if groupNumber != 2 && groupNumber%100 != 1 {
 					if groupNumber >= 3 && groupNumber <= 10 {
 						// for numbers between 3 and 9 we use plural name
-						result = arabicPluralGroups[groupLevel] + " " + result
+						result = group_words[groupLevel].Plural + " " + result
 					} else {
 						if len(result) > 0 {
 							// use appending case
-							result = arabicAppendedGroup[groupLevel] + " " + result
+							result = group_words[groupLevel].Appended + " " + result
 						} else {
 							// use normal case
-							result = arabicGroup[groupLevel] + " " + result
+							result = group_words[groupLevel].Normal + " " + result
 						}
 					}
 				}
@@ -211,59 +293,59 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 	return strings.TrimSpace(result)
 }
 
-func getDigitFeminineStatus(digit int, groupLevel int, feminine bool) string {
+func getDigitWord(digit int, groupLevel int, feminine bool) string {
 	if feminine && (groupLevel == -1 || groupLevel == 0) {
-		return small_words_feminine[digit]
+		return small_words[digit][1]
 	}
-	return small_words_masc[digit]
+	return small_words[digit][0]
 }
 
-func processArabicGroupTens(tens int, hundreds int, groupLevel int, feminine bool) string {
+func processTens(tens int, hundreds int, groupLevel int, feminine bool) string {
 	if tens < 20 {
 		// if we are processing under 20 numbers
 		if tens == 2 && hundreds == 0 && groupLevel > 0 {
 			// This is special case for number 2 when it comes alone in the group
-			return arabicTwos[groupLevel] // في حالة الافراد
+			// In the case of individuals
+			return group_words[groupLevel].Genitive + "ن"
 		}
 		// General case
 		if tens == 1 && groupLevel > 0 {
-			return arabicGroup[groupLevel]
+			return group_words[groupLevel].Normal
 		}
 		// Get Feminine status for this digit
-		return getDigitFeminineStatus(tens, groupLevel, feminine)
+		return getDigitWord(tens, groupLevel, feminine)
 	}
 	ones := tens % 10
 	if ones == 0 {
-		return ten_words[tens]
+		return small_words[tens][0]
 	}
 
-	return getDigitFeminineStatus(ones, groupLevel, feminine) + ar_and + ten_words[tens/10*10]
+	return getDigitWord(ones, groupLevel, feminine) + ar_and + small_words[tens/10*10][0]
 }
 
-func processArabicGroup(groupNumber int, groupLevel int, feminine bool) string {
+func processGroup(groupNumber int, groupLevel int, feminine bool) string {
 	tens := groupNumber % 100
-	hundreds := groupNumber / 100
+	hundreds := groupNumber / 100 * 100
+
+	if tens == 0 {
+		if hundreds == 200 && groupLevel > 0 {
+			// Genitive case: حالة المضاف
+			return group_words[0].Genitive
+		}
+		return small_words[hundreds][0]
+	}
+
 	result := ""
-
 	if hundreds > 0 {
-		if tens == 0 && hundreds == 2 { // حالة المضاف
-			if groupLevel == 0 {
-				result = arabicHundreds[hundreds]
-			} else {
-				result = arabicAppendedTwos[0]
-			}
-		} else { // الحالة العادية
-			result = arabicHundreds[hundreds]
-		}
+		// الحالة العادية
+		result = small_words[hundreds][0]
 	}
 
-	if tens > 0 {
-		tmp_result := processArabicGroupTens(tens, hundreds, groupLevel, feminine)
-		if result != "" {
-			result += ar_and
-		}
-		result += tmp_result
+	tmp_result := processTens(tens, hundreds, groupLevel, feminine)
+	if result != "" {
+		result += ar_and
 	}
+	result += tmp_result
 
 	return result
 }
