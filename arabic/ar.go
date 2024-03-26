@@ -233,6 +233,30 @@ func getDigitFeminineStatus(digit int, groupLevel int, feminine bool) string {
 	return arabicOnes[digit]
 }
 
+func processArabicGroupTens(tens int, hundreds int, groupLevel int, feminine bool) string {
+	if tens < 20 {
+		// if we are processing under 20 numbers
+		if tens == 2 && hundreds == 0 && groupLevel > 0 {
+			// This is special case for number 2 when it comes alone in the group
+			return arabicTwos[groupLevel] // في حالة الافراد
+		}
+		// General case
+		if tens == 1 && groupLevel > 0 {
+			return arabicGroup[groupLevel]
+		}
+		// Get Feminine status for this digit
+		return getDigitFeminineStatus(tens, groupLevel, feminine)
+	}
+	ones := tens % 10
+	tens = tens/10 - 2 // 20's offset
+
+	if ones == 0 {
+		return arabicTens[tens]
+	}
+
+	return getDigitFeminineStatus(ones, groupLevel, feminine) + ar_and + arabicTens[tens]
+}
+
 func processArabicGroup(groupNumber int, groupLevel int, feminine bool) string {
 	tens := groupNumber % 100
 	hundreds := groupNumber / 100
@@ -251,41 +275,11 @@ func processArabicGroup(groupNumber int, groupLevel int, feminine bool) string {
 	}
 
 	if tens > 0 {
-		if tens < 20 { // if we are processing under 20 numbers
-			if tens == 2 && hundreds == 0 && groupLevel > 0 { // This is special case for number 2 when it comes alone in the group
-				result = arabicTwos[groupLevel] // في حالة الافراد
-			} else { // General case
-				if result != "" {
-					result += ar_and
-				}
-
-				if tens == 1 && groupLevel > 0 {
-					result += arabicGroup[groupLevel]
-				} else {
-					// Get Feminine status for this digit
-					result += getDigitFeminineStatus(tens, groupLevel, feminine)
-				}
-			}
-		} else {
-			ones := tens % 10
-			tens = tens/10 - 2 // 20's offset
-
-			if ones > 0 {
-				if result != "" {
-					result += ar_and
-				}
-
-				// Get Feminine status for this digit
-				result += getDigitFeminineStatus(ones, groupLevel, feminine)
-			}
-
-			if result != "" {
-				result += ar_and
-			}
-
-			// Get Tens text
-			result += arabicTens[tens]
+		tmp_result := processArabicGroupTens(tens, hundreds, groupLevel, feminine)
+		if result != "" {
+			result += ar_and
 		}
+		result += tmp_result
 	}
 
 	return result
