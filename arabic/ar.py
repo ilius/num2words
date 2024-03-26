@@ -27,10 +27,21 @@
 
 import locale
 import sys
+import typing
+
+ar_zero = "صفر"
+
+
+class SmallWord(typing.NamedTuple):
+	male: str
+	female: str
+
+	def get(self, mf: str) -> str:
+		return getattr(self, mf)
 
 # words = list[
 # 	{
-# 		"m": list[
+# 		male=list[
 # 			{
 # 				"0": "",
 # 				"1": "واحد",
@@ -71,7 +82,7 @@ import sys
 # 				"900": "تسعمئة",
 # 			}
 # 		],
-# 		"f": list[
+# 		female=list[
 # 			{
 # 				"0": "",
 # 				"1": "واحدة",
@@ -114,44 +125,158 @@ import sys
 # 		],
 # 	}
 # ]
+
+
+
 words = {
-	"0": {"f": "", "m": ""},
-	"1": {"f": "واحدة", "m": "واحد"},
-	"10": {"f": "عشر", "m": "عشرة"},
-	"100": {"f": "مئة", "m": "مئة"},
-	"11": {"f": "إحدى عشرة", "m": "أحد عشر"},
-	"12": {"f": "ثنتا عشرة", "m": "اثنا عشر"},
-	"13": {"f": "ثلاث عشرة", "m": "ثلاثة عشر"},
-	"14": {"f": "أربع عشرة", "m": "أربعة عشر"},
-	"15": {"f": "خمس عشرة", "m": "خمسة عشر"},
-	"16": {"f": "ست عشرة", "m": "ستة عشر"},
-	"17": {"f": "سبع عشرة", "m": "سبعة عشر"},
-	"18": {"f": "ثمان عشرة", "m": "ثمانية عشر"},
-	"19": {"f": "تسع عشرة", "m": "تسعة عشر"},
-	"2": {"f": "اثنتان", "m": "اثنان"},
-	"20": {"f": "عشرون", "m": "عشرون"},
-	"200": {"f": "مئتان", "m": "مئتان"},
-	"3": {"f": "ثلاث", "m": "ثلاثة"},
-	"30": {"f": "ثلاثون", "m": "ثلاثون"},
-	"300": {"f": "ثلاثمئة", "m": "ثلاثمئة"},
-	"4": {"f": "أربع", "m": "أربعة"},
-	"40": {"f": "أربعون", "m": "أربعون"},
-	"400": {"f": "أربعمئة", "m": "أربعمئة"},
-	"5": {"f": "خمس", "m": "خمسة"},
-	"50": {"f": "خمسون", "m": "خمسون"},
-	"500": {"f": "خمسمئة", "m": "خمسمئة"},
-	"6": {"f": "ست", "m": "ستة"},
-	"60": {"f": "ستون", "m": "ستون"},
-	"600": {"f": "ستمئة", "m": "ستمئة"},
-	"7": {"f": "سبع", "m": "سبعة"},
-	"70": {"f": "سبعون", "m": "سبعون"},
-	"700": {"f": "سبعمئة", "m": "سبعمئة"},
-	"8": {"f": "ثمان", "m": "ثمانية"},
-	"80": {"f": "ثمانون", "m": "ثمانون"},
-	"800": {"f": "ثمانمئة", "m": "ثمانمئة"},
-	"9": {"f": "تسع", "m": "تسعة"},
-	"90": {"f": "تسعون", "m": "تسعون"},
-	"900": {"f": "تسعمئة", "m": "تسعمئة"},
+	"0": SmallWord(
+		male="",
+		female="",
+	),
+	"1": SmallWord(
+		female="واحدة",
+		male="واحد",
+	),
+	"2": SmallWord(
+		female="اثنتان",
+		male="اثنان",
+	),
+	"3": SmallWord(
+		female="ثلاث",
+		male="ثلاثة",
+	),
+	"4": SmallWord(
+		female="أربع",
+		male="أربعة",
+	),
+	"5": SmallWord(
+		female="خمس",
+		male="خمسة",
+	),
+	"6": SmallWord(
+		female="ست",
+		male="ستة",
+	),
+	"7": SmallWord(
+		female="سبع",
+		male="سبعة",
+	),
+	"8": SmallWord(
+		female="ثمان",
+		male="ثمانية",
+	),
+	"9": SmallWord(
+		female="تسع",
+		male="تسعة",
+	),
+	"10": SmallWord(
+		female="عشر",
+		male="عشرة",
+	),
+	"11": SmallWord(
+		female="إحدى عشرة",
+		male="أحد عشر",
+	),
+	"12": SmallWord(
+		female="ثنتا عشرة",
+		male="اثنا عشر",
+	),
+	"13": SmallWord(
+		female="ثلاث عشرة",
+		male="ثلاثة عشر",
+	),
+	"14": SmallWord(
+		female="أربع عشرة",
+		male="أربعة عشر",
+	),
+	"15": SmallWord(
+		female="خمس عشرة",
+		male="خمسة عشر",
+	),
+	"16": SmallWord(
+		female="ست عشرة",
+		male="ستة عشر",
+	),
+	"17": SmallWord(
+		female="سبع عشرة",
+		male="سبعة عشر",
+	),
+	"18": SmallWord(
+		female="ثمان عشرة",
+		male="ثمانية عشر",
+	),
+	"19": SmallWord(
+		female="تسع عشرة",
+		male="تسعة عشر",
+	),
+	"20": SmallWord(
+		female="عشرون",
+		male="عشرون",
+	),
+	"30": SmallWord(
+		female="ثلاثون",
+		male="ثلاثون",
+	),
+	"40": SmallWord(
+		female="أربعون",
+		male="أربعون",
+	),
+	"50": SmallWord(
+		female="خمسون",
+		male="خمسون",
+	),
+	"60": SmallWord(
+		female="ستون",
+		male="ستون",
+	),
+	"70": SmallWord(
+		female="سبعون",
+		male="سبعون",
+	),
+	"80": SmallWord(
+		female="ثمانون",
+		male="ثمانون",
+	),
+	"90": SmallWord(
+		female="تسعون",
+		male="تسعون",
+	),
+	"100": SmallWord(
+		female="مائة",
+		male="مائة",
+	),
+	"200": SmallWord(
+		female="مئتان",
+		male="مئتان",
+	),
+	"300": SmallWord(
+		female="ثلاثمائة",
+		male="ثلاثمائة",
+	),
+	"400": SmallWord(
+		female="أربعمائة",
+		male="أربعمائة",
+	),
+	"500": SmallWord(
+		female="خمسمائة",
+		male="خمسمائة",
+	),
+	"600": SmallWord(
+		female="ستمائة",
+		male="ستمائة",
+	),
+	"700": SmallWord(
+		female="سبعمائة",
+		male="سبعمائة",
+	),
+	"800": SmallWord(
+		female="ثمانمائة",
+		male="ثمانمائة",
+	),
+	"900": SmallWord(
+		female="تسعمائة",
+		male="تسعمائة",
+	),
 }
 
 
@@ -194,12 +319,16 @@ class number2word:
 		return x1
 
 	@staticmethod
-	def convert(number, place):
+	def convert(number: str | int, place: int):
+		number = str(number)
+		if number in ("", "0"):
+			return ""
+
 		# take in charge the sex of NUMBERED
-		#  sex =self.sex
+		#  sex = self.sex
 		returnmsg = ""
 
-		# sex = "m"
+		# sex = "male"
 		# the number word in arabic for masculine and feminine
 
 		# take in charge the different way of writing the thousands and millions ...
@@ -209,12 +338,12 @@ class number2word:
 		#     '4' : list['1' : 'مليار', '2' : 'ملياران', '3' : 'مليارات'] ]
 
 		mf = {
-			"1": "m",
-			"2": "m",
-			"3": "m",
-			"4": "m",
+			1: "male",
+			2: "male",
+			3: "male",
+			4: "male",
 		}
-		number_length = len(str(number))
+		number_length = len(number)
 
 		# we are dealing with 3 digits number in each loop the main method calls convert
 		# method and pass a string with tree digit in it ...
@@ -223,8 +352,6 @@ class number2word:
 		# we will clean left zero for example 001 will be 1 ,,
 		# 012 will be 12
 
-		if int(number) == 0:
-			return ""
 		if number[0] == 0:
 			if number[1] == 0:
 				return int(number[:-1])
@@ -233,47 +360,46 @@ class number2word:
 		# switching number length
 		# if number have on digits like "1"
 		returnmsg = ""
-		number = str(number)
 		if number_length == 1:
 			# number=number+'one'
 			if place == 1:
-				returnmsg = returnmsg + words[number][mf[str(place)]]
+				returnmsg = returnmsg + words[number].get(mf[place])
 			if place == 2:
 				if int(number) == 1:
 					returnmsg = " ألف"
 				elif int(number) == 2:
 					returnmsg = " ألفان"
 				else:
-					returnmsg = returnmsg + words[number][mf[str(place)]] + " آلاف"
+					returnmsg = returnmsg + words[number].get(mf[place]) + " آلاف"
 			if place == 3:
 				if int(number) == 1:
 					returnmsg = returnmsg + " مليون"
 				elif int(number) == 2:
 					returnmsg = returnmsg + " مليونان"
 				else:
-					returnmsg = returnmsg + words[number][mf[str(place)]] + " ملايين"
+					returnmsg = returnmsg + words[number].get(mf[place]) + " ملايين"
 			if place == 4:
 				if int(number) == 1:
 					returnmsg = returnmsg + " مليار"
 				elif int(number) == 2:
 					returnmsg = returnmsg + " ملياران"
 				else:
-					returnmsg = returnmsg + words[number][mf[str(place)]] + " مليارات"
+					returnmsg = returnmsg + words[number].get(mf[place]) + " مليارات"
 
 		elif number_length == 2:
 			# number=number+'two'
 
-			# if words[number][mf[str(place)]]:
+			# if words[number].get(mf[place]):
 			if number in words:
-				returnmsg = returnmsg + words[number][mf[str(place)]]
+				returnmsg = returnmsg + words[number].get(mf[place])
 			else:
 				twoy = int(number[0]) * 10
 				ony = number[1]
 				returnmsg = (
 					returnmsg
-					+ words[ony][mf[str(place)]]
-					+ " و"
-					+ words[str(twoy)][mf[str(place)]]
+					+ words[ony].get(mf[place])
+					+ " و "
+					+ words[str(twoy)].get(mf[place])
 				)
 
 			if place == 2:
@@ -285,11 +411,11 @@ class number2word:
 
 		elif number_length == 3:
 			# number=number+'three'
-			# if words[number][mf[str(place)]]:
-			if str(number) in words:
-				returnmsg = returnmsg + words[str(number)][mf[str(place)]]
+			# if words[number].get(mf[place]):
+			if number in words:
+				returnmsg = returnmsg + words[str(number)].get(mf[place])
 
-				if int(number) == 200:
+				if number == "200":
 					returnmsg = " مئتا"
 
 				if place == 2:
@@ -303,13 +429,13 @@ class number2word:
 
 			threey = int(number[0]) * 100
 			threey = str(threey)
-			if words[threey][mf[str(place)]]:
-				returnmsg = returnmsg + words[threey][mf[str(place)]]
+			if words[threey].get(mf[place]):
+				returnmsg = returnmsg + words[threey].get(mf[place])
 
 			twoyony = (int(number[1]) * 10) + int(number[2])
 			if int(twoyony) == 2:
 				if place == 1:
-					twoyony = words["2"][mf[str(place)]]
+					twoyony = words["2"].get(mf[place])
 				if place == 2:
 					twoyony = " ألفان"
 				if place == 3:
@@ -325,7 +451,7 @@ class number2word:
 			elif int(twoyony) == 1:
 				twoyony = str(twoyony)
 				if place == 1:
-					twoyony = words["1"][mf[str(place)]]
+					twoyony = words["1"].get(mf[place])
 				if place == 2:
 					twoyony = "ألف"
 				if place == 3:
@@ -339,17 +465,17 @@ class number2word:
 				returnmsg = returnmsg + " " + twoyony
 
 			else:
-				# if words[twoyony][mf[str(place)]]:
+				# if words[twoyony].get(mf[place]):
 				twoyony = str(twoyony)
 				if twoyony in words:
 					# if words.has_key(twoyony):
-					twoyony = words[twoyony][mf[str(place)]]
+					twoyony = words[twoyony].get(mf[place])
 				else:
 					twoy = int(number[1]) * 10
 					twoy = str(twoy)
 					ony = number[2]
 					twoyony = (
-						words[ony][mf[str(place)]] + " و " + words[twoy][mf[str(place)]]
+						words[ony].get(mf[place]) + " و " + words[twoy].get(mf[place])
 					)
 				if twoyony and int(threey) != 0:
 					returnmsg = returnmsg + " و " + twoyony
@@ -367,6 +493,8 @@ class number2word:
 
 
 def convert(st: str) -> str:
+	if st == "0":
+		return ar_zero
 	return number2word(int(st)).to_string()
 
 
