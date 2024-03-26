@@ -18,66 +18,61 @@ const (
 	ar_zero = "صفر"
 )
 
-// Ones
-var arabicOnes = []string{
-	"",
-	"واحد",
-	"اثنان",
-	"ثلاثة",
-	"أربعة",
-	"خمسة",
-	"ستة",
-	"سبعة",
-	"ثمانية",
-	"تسعة",
-	"عشرة",
-	"أحد عشر",
-	"اثنا عشر",
-	"ثلاثة عشر",
-	"أربعة عشر",
-	"خمسة عشر",
-	"ستة عشر",
-	"سبعة عشر",
-	"ثمانية عشر",
-	"تسعة عشر",
+var small_words_masc = map[int]string{
+	1:  "واحد",
+	2:  "اثنان",
+	3:  "ثلاثة",
+	4:  "أربعة",
+	5:  "خمسة",
+	6:  "ستة",
+	7:  "سبعة",
+	8:  "ثمانية",
+	9:  "تسعة",
+	10: "عشرة",
+	11: "أحد عشر",
+	12: "اثنا عشر",
+	13: "ثلاثة عشر",
+	14: "أربعة عشر",
+	15: "خمسة عشر",
+	16: "ستة عشر",
+	17: "سبعة عشر",
+	18: "ثمانية عشر",
+	19: "تسعة عشر",
 }
 
-var arabicFeminineOnes = []string{
-	"",
-	"إحدى",
-	"اثنتان",
-	"ثلاث",
-	"أربع",
-	"خمس",
-	"ست",
-	"سبع",
-	"ثمان",
-	"تسع",
-	"عشر",
-	"إحدى عشرة",
-	"اثنتا عشرة",
-	"ثلاث عشرة",
-	"أربع عشرة",
-	"خمس عشرة",
-	"ست عشرة",
-	"سبع عشرة",
-	"ثماني عشرة",
-	"تسع عشرة",
+var small_words_feminine = map[int]string{
+	1:  "إحدى",
+	2:  "اثنتان",
+	3:  "ثلاث",
+	4:  "أربع",
+	5:  "خمس",
+	6:  "ست",
+	7:  "سبع",
+	8:  "ثمان",
+	9:  "تسع",
+	10: "عشر",
+	11: "إحدى عشرة",
+	12: "اثنتا عشرة",
+	13: "ثلاث عشرة",
+	14: "أربع عشرة",
+	15: "خمس عشرة",
+	16: "ست عشرة",
+	17: "سبع عشرة",
+	18: "ثماني عشرة",
+	19: "تسع عشرة",
 }
 
-// Tens
-var arabicTens = []string{
-	"عشرون",
-	"ثلاثون",
-	"أربعون",
-	"خمسون",
-	"ستون",
-	"سبعون",
-	"ثمانون",
-	"تسعون",
+var ten_words = map[int]string{
+	20: "عشرون",
+	30: "ثلاثون",
+	40: "أربعون",
+	50: "خمسون",
+	60: "ستون",
+	70: "سبعون",
+	80: "ثمانون",
+	90: "تسعون",
 }
 
-// Hundreds
 var arabicHundreds = []string{
 	"",
 	"مائة",
@@ -91,7 +86,6 @@ var arabicHundreds = []string{
 	"تسعمائة",
 }
 
-// Twos
 var arabicTwos = []string{
 	"مئتان",
 	"ألفان",
@@ -103,7 +97,6 @@ var arabicTwos = []string{
 	"سكستيليونان",
 }
 
-// Appended
 var arabicAppendedTwos = []string{
 	"مئتا",
 	"ألفا",
@@ -115,9 +108,6 @@ var arabicAppendedTwos = []string{
 	"سكستيليونا",
 }
 
-// Twos
-
-// Group
 var arabicGroup = []string{
 	"مائة",
 	"ألف",
@@ -128,8 +118,6 @@ var arabicGroup = []string{
 	"كوينتليون",
 	"سكستيليون",
 }
-
-// Appended
 
 var arabicAppendedGroup = []string{
 	"",
@@ -142,9 +130,6 @@ var arabicAppendedGroup = []string{
 	"سكستيليوناً",
 }
 
-// Group
-
-// Plural groups
 var arabicPluralGroups = []string{
 	"",
 	"آلاف",
@@ -228,9 +213,9 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 
 func getDigitFeminineStatus(digit int, groupLevel int, feminine bool) string {
 	if feminine && (groupLevel == -1 || groupLevel == 0) {
-		return arabicFeminineOnes[digit]
+		return small_words_feminine[digit]
 	}
-	return arabicOnes[digit]
+	return small_words_masc[digit]
 }
 
 func processArabicGroupTens(tens int, hundreds int, groupLevel int, feminine bool) string {
@@ -248,13 +233,11 @@ func processArabicGroupTens(tens int, hundreds int, groupLevel int, feminine boo
 		return getDigitFeminineStatus(tens, groupLevel, feminine)
 	}
 	ones := tens % 10
-	tens = tens/10 - 2 // 20's offset
-
 	if ones == 0 {
-		return arabicTens[tens]
+		return ten_words[tens]
 	}
 
-	return getDigitFeminineStatus(ones, groupLevel, feminine) + ar_and + arabicTens[tens]
+	return getDigitFeminineStatus(ones, groupLevel, feminine) + ar_and + ten_words[tens/10*10]
 }
 
 func processArabicGroup(groupNumber int, groupLevel int, feminine bool) string {
