@@ -156,70 +156,65 @@ var arabicPluralGroups = []string{
 	"سكستيليونات",
 }
 
-func ConvertBigInt(number *big.Int) string {
-	return convertBigInt(number, false)
-}
-
-func convertBigInt(number *big.Int, feminine bool) string {
-	return strings.TrimSpace(convertToArabic(number, feminine))
-}
-
 func ConvertString(number string) string {
 	num_big := &big.Int{}
 	num_big.SetString(number, 10)
 	return convertBigInt(num_big, false)
 }
 
-func getDigitFeminineStatus(digit int, groupLevel int, feminine bool) string {
-	if groupLevel == -1 || groupLevel == 0 {
-		if !feminine {
-			return arabicOnes[digit]
-		}
-		return arabicFeminineOnes[digit]
-	}
-	return arabicOnes[digit]
+func ConvertBigInt(number *big.Int) string {
+	return convertBigInt(number, false)
 }
 
-func convertToArabic(number *big.Int, feminine bool) string {
-	if number.Cmp(big_0) == 0 {
+// // num < 1000
+// func convertSmall(num uint16) string {
+
+// }
+
+func convertBigInt(numberOrig *big.Int, feminine bool) string {
+	if numberOrig.Cmp(big_0) == 0 {
 		return ar_zero
 	}
 
-	tempNumber := &big.Int{}
-	tempNumber.SetBytes(number.Bytes())
+	number := &big.Int{}
+	number.SetBytes(numberOrig.Bytes())
 
 	result := ""
-	group := 0
+	groupLevel := 0
 
-	for tempNumber.Cmp(big_1) >= 0 {
-
+	for number.Cmp(big_1) >= 0 {
 		// separate number into groups
-		mod := &big.Int{}
-		tempNumber.DivMod(tempNumber, big_1000, mod)
-		numberToProcess := int(mod.Int64())
+		groupNumberBig := &big.Int{}
+		number.DivMod(number, big_1000, groupNumberBig)
+		groupNumber := int(groupNumberBig.Int64())
 
 		// convert group into its text
-		tempValue := int(tempNumber.Int64())
-		groupDescription := processArabicGroup(numberToProcess, group, tempValue, feminine)
+		// tempNumber -> remaining
+		groupDescription := processArabicGroup(
+			groupNumber,
+			groupLevel,
+			int(number.Int64()),
+			feminine,
+		)
 
 		// here we add the new converted group to the previous concatenated text
 		if groupDescription != "" {
-			if group > 0 {
+			if groupLevel > 0 {
 				if len(result) > 0 {
 					// FIXME: huh??
 					result = "و " + result
 				}
-				if numberToProcess != 2 && numberToProcess%100 != 1 {
-					if numberToProcess >= 3 && numberToProcess <= 10 {
+				if groupNumber != 2 && groupNumber%100 != 1 {
+					if groupNumber >= 3 && groupNumber <= 10 {
 						// for numbers between 3 and 9 we use plural name
-						result = arabicPluralGroups[group] + " " + result
+						result = arabicPluralGroups[groupLevel] + " " + result
 					} else {
 						if len(result) > 0 {
 							// use appending case
-							result = arabicAppendedGroup[group] + " " + result
+							result = arabicAppendedGroup[groupLevel] + " " + result
 						} else {
 							// use normal case
-							result = arabicGroup[group] + " " + result
+							result = arabicGroup[groupLevel] + " " + result
 						}
 					}
 				}
@@ -227,10 +222,17 @@ func convertToArabic(number *big.Int, feminine bool) string {
 			result = groupDescription + " " + result
 		}
 
-		group++
+		groupLevel++
 	}
 
-	return result
+	return strings.TrimSpace(result)
+}
+
+func getDigitFeminineStatus(digit int, groupLevel int, feminine bool) string {
+	if feminine && (groupLevel == -1 || groupLevel == 0) {
+		return arabicFeminineOnes[digit]
+	}
+	return arabicOnes[digit]
 }
 
 func processArabicGroup(groupNumber int, groupLevel int, remaining int, feminine bool) string {
