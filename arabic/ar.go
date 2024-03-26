@@ -18,150 +18,155 @@ const (
 	ar_zero = "صفر"
 )
 
-var small_words = map[int][2]string{
+type SmallWord struct {
+	Male   string
+	Female string
+}
+
+var small_words = map[int]SmallWord{
 	1: {
-		"واحد",
-		"إحدى",
+		Male:   "واحد",
+		Female: "إحدى",
 	},
 	2: {
-		"اثنان",
-		"اثنتان",
+		Male:   "اثنان",
+		Female: "اثنتان",
 	},
 	3: {
-		"ثلاثة",
-		"ثلاث",
+		Male:   "ثلاثة",
+		Female: "ثلاث",
 	},
 	4: {
-		"أربعة",
-		"أربع",
+		Male:   "أربعة",
+		Female: "أربع",
 	},
 	5: {
-		"خمسة",
-		"خمس",
+		Male:   "خمسة",
+		Female: "خمس",
 	},
 	6: {
-		"ستة",
-		"ست",
+		Male:   "ستة",
+		Female: "ست",
 	},
 	7: {
-		"سبعة",
-		"سبع",
+		Male:   "سبعة",
+		Female: "سبع",
 	},
 	8: {
-		"ثمانية",
-		"ثمان",
+		Male:   "ثمانية",
+		Female: "ثمان",
 	},
 	9: {
-		"تسعة",
-		"تسع",
+		Male:   "تسعة",
+		Female: "تسع",
 	},
 	10: {
-		"عشرة",
-		"عشر",
+		Male:   "عشرة",
+		Female: "عشر",
 	},
 	11: {
-		"أحد عشر",
-		"إحدى عشرة",
+		Male:   "أحد عشر",
+		Female: "إحدى عشرة",
 	},
 	12: {
-		"اثنا عشر",
-		"اثنتا عشرة",
+		Male:   "اثنا عشر",
+		Female: "اثنتا عشرة",
 	},
 	13: {
-		"ثلاثة عشر",
-		"ثلاث عشرة",
+		Male:   "ثلاثة عشر",
+		Female: "ثلاث عشرة",
 	},
 	14: {
-		"أربعة عشر",
-		"أربع عشرة",
+		Male:   "أربعة عشر",
+		Female: "أربع عشرة",
 	},
 	15: {
-		"خمسة عشر",
-		"خمس عشرة",
+		Male:   "خمسة عشر",
+		Female: "خمس عشرة",
 	},
 	16: {
-		"ستة عشر",
-		"ست عشرة",
+		Male:   "ستة عشر",
+		Female: "ست عشرة",
 	},
 	17: {
-		"سبعة عشر",
-		"سبع عشرة",
+		Male:   "سبعة عشر",
+		Female: "سبع عشرة",
 	},
 	18: {
-		"ثمانية عشر",
-		"ثماني عشرة",
+		Male:   "ثمانية عشر",
+		Female: "ثماني عشرة",
 	},
 	19: {
-		"تسعة عشر",
-		"تسع عشرة",
+		Male:   "تسعة عشر",
+		Female: "تسع عشرة",
 	},
 	20: {
-		"عشرون",
-		"عشرون",
+		Male:   "عشرون",
+		Female: "عشرون",
 	},
 	30: {
-		"ثلاثون",
-		"ثلاثون",
+		Male:   "ثلاثون",
+		Female: "ثلاثون",
 	},
 	40: {
-		"أربعون",
-		"أربعون",
+		Male:   "أربعون",
+		Female: "أربعون",
 	},
 	50: {
-		"خمسون",
-		"خمسون",
+		Male:   "خمسون",
+		Female: "خمسون",
 	},
 	60: {
-		"ستون",
-		"ستون",
+		Male:   "ستون",
+		Female: "ستون",
 	},
 	70: {
-		"سبعون",
-		"سبعون",
+		Male:   "سبعون",
+		Female: "سبعون",
 	},
 	80: {
-		"ثمانون",
-		"ثمانون",
+		Male:   "ثمانون",
+		Female: "ثمانون",
 	},
 	90: {
-		"تسعون",
-		"تسعون",
+		Male:   "تسعون",
+		Female: "تسعون",
 	},
 	100: {
-		"مائة",
-		"مائة",
+		Male:   "مائة",
+		Female: "مائة",
 	},
 	200: {
-		"مئتان",
-		"مئتان",
+		Male:   "مئتان",
+		Female: "مئتان",
 	},
 	300: {
-		"ثلاثمائة",
-		"ثلاثمائة",
+		Male:   "ثلاثمائة",
+		Female: "ثلاثمائة",
 	},
 	400: {
-		"أربعمائة",
-		"أربعمائة",
+		Male:   "أربعمائة",
+		Female: "أربعمائة",
 	},
 	500: {
-		"خمسمائة",
-		"خمسمائة",
+		Male:   "خمسمائة",
+		Female: "خمسمائة",
 	},
 	600: {
-		"ستمائة",
-		"ستمائة",
+		Male:   "ستمائة",
+		Female: "ستمائة",
 	},
 	700: {
-		"سبعمائة",
-		"سبعمائة",
+		Male:   "سبعمائة",
+		Female: "سبعمائة",
 	},
 	800: {
-		"ثمانمائة",
-		"ثمانمائة",
+		Male:   "ثمانمائة",
+		Female: "ثمانمائة",
 	},
 	900: {
-		"تسعمائة",
-		"تسعمائة",
+		Male:   "تسعمائة",
+		Female: "تسعمائة",
 	},
 }
 
@@ -295,9 +300,9 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 
 func getDigitWord(digit int, groupLevel int, feminine bool) string {
 	if feminine && (groupLevel == -1 || groupLevel == 0) {
-		return small_words[digit][1]
+		return small_words[digit].Female
 	}
-	return small_words[digit][0]
+	return small_words[digit].Male
 }
 
 func processTens(tens int, hundreds int, groupLevel int, feminine bool) string {
@@ -317,10 +322,10 @@ func processTens(tens int, hundreds int, groupLevel int, feminine bool) string {
 	}
 	ones := tens % 10
 	if ones == 0 {
-		return small_words[tens][0]
+		return small_words[tens].Male
 	}
 
-	return getDigitWord(ones, groupLevel, feminine) + ar_and + small_words[tens/10*10][0]
+	return getDigitWord(ones, groupLevel, feminine) + ar_and + small_words[tens/10*10].Male
 }
 
 func processGroup(groupNumber int, groupLevel int, feminine bool) string {
@@ -332,13 +337,13 @@ func processGroup(groupNumber int, groupLevel int, feminine bool) string {
 			// Genitive case: حالة المضاف
 			return group_words[0].Genitive
 		}
-		return small_words[hundreds][0]
+		return small_words[hundreds].Male
 	}
 
 	result := ""
 	if hundreds > 0 {
 		// الحالة العادية
-		result = small_words[hundreds][0]
+		result = small_words[hundreds].Male
 	}
 
 	tmp_result := processTens(tens, hundreds, groupLevel, feminine)
