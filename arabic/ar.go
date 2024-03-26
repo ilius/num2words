@@ -263,8 +263,6 @@ func processArabicGroup(groupNumber int, groupLevel int, remaining int, feminine
 
 				if tens == 1 && groupLevel > 0 {
 					result += arabicGroup[groupLevel]
-				} else if (tens == 1 || tens == 2) && (groupLevel == 0 || groupLevel == -1) && hundreds == 0 && remaining == 0 {
-					// Special case for 1 and 2 numbers like: ليرة سورية و ليرتان سوريتان
 				} else {
 					// Get Feminine status for this digit
 					result += getDigitFeminineStatus(tens, groupLevel, feminine)

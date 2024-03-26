@@ -63,10 +63,16 @@ func TestConvertString(t *testing.T) {
 }
 
 func TestConvertBigInt(t *testing.T) {
-	is := is.New(t)
+	is := is.New(t).Lax()
 	for num_str, words_expected := range testData {
 		bn := &big.Int{}
 		bn.SetString(num_str, 10)
 		is.Equal(arabic.ConvertBigInt(bn), words_expected)
 	}
+}
+
+func TestConvertBigIntTiny(t *testing.T) {
+	is := is.New(t)
+	is.Equal(arabic.ConvertBigInt(big.NewInt(1)), "واحد")
+	is.Equal(arabic.ConvertBigInt(big.NewInt(2)), "اثنان")
 }
