@@ -30,7 +30,7 @@ import sys
 
 # words = list[
 # 	{
-# 		"male": list[
+# 		"m": list[
 # 			{
 # 				"0": "",
 # 				"1": "واحد",
@@ -71,7 +71,7 @@ import sys
 # 				"900": "تسعمئة",
 # 			}
 # 		],
-# 		"female": list[
+# 		"f": list[
 # 			{
 # 				"0": "",
 # 				"1": "واحدة",
@@ -115,84 +115,43 @@ import sys
 # 	}
 # ]
 words = {
-	"male": {
-		"0": "",
-		"1": "واحد",
-		"2": "اثنان",
-		"3": "ثلاثة",
-		"4": "أربعة",
-		"5": "خمسة",
-		"6": "ستة",
-		"7": "سبعة",
-		"8": "ثمانية",
-		"9": "تسعة",
-		"10": "عشرة",
-		"11": "أحد عشر",
-		"12": "اثنا عشر",
-		"13": "ثلاثة عشر",
-		"14": "أربعة عشر",
-		"15": "خمسة عشر",
-		"16": "ستة عشر",
-		"17": "سبعة عشر",
-		"18": "ثمانية عشر",
-		"19": "تسعة عشر",
-		"20": "عشرون",
-		"30": "ثلاثون",
-		"40": "أربعون",
-		"50": "خمسون",
-		"60": "ستون",
-		"70": "سبعون",
-		"80": "ثمانون",
-		"90": "تسعون",
-		"100": "مئة",
-		"200": "مئتان",
-		"300": "ثلاثمئة",
-		"400": "أربعمئة",
-		"500": "خمسمئة",
-		"600": "ستمئة",
-		"700": "سبعمئة",
-		"800": "ثمانمئة",
-		"900": "تسعمئة",
-	},
-	"female": {
-		"0": "",
-		"1": "واحدة",
-		"2": "اثنتان",
-		"3": "ثلاث",
-		"4": "أربع",
-		"5": "خمس",
-		"6": "ست",
-		"7": "سبع",
-		"8": "ثمان",
-		"9": "تسع",
-		"10": "عشر",
-		"11": "إحدى عشرة",
-		"12": "ثنتا عشرة",
-		"13": "ثلاث عشرة",
-		"14": "أربع عشرة",
-		"15": "خمس عشرة",
-		"16": "ست عشرة",
-		"17": "سبع عشرة",
-		"18": "ثمان عشرة",
-		"19": "تسع عشرة",
-		"20": "عشرون",
-		"30": "ثلاثون",
-		"40": "أربعون",
-		"50": "خمسون",
-		"60": "ستون",
-		"70": "سبعون",
-		"80": "ثمانون",
-		"90": "تسعون",
-		"100": "مئة",
-		"200": "مئتان",
-		"300": "ثلاثمئة",
-		"400": "أربعمئة",
-		"500": "خمسمئة",
-		"600": "ستمئة",
-		"700": "سبعمئة",
-		"800": "ثمانمئة",
-		"900": "تسعمئة",
-	},
+	"0": {"f": "", "m": ""},
+	"1": {"f": "واحدة", "m": "واحد"},
+	"10": {"f": "عشر", "m": "عشرة"},
+	"100": {"f": "مئة", "m": "مئة"},
+	"11": {"f": "إحدى عشرة", "m": "أحد عشر"},
+	"12": {"f": "ثنتا عشرة", "m": "اثنا عشر"},
+	"13": {"f": "ثلاث عشرة", "m": "ثلاثة عشر"},
+	"14": {"f": "أربع عشرة", "m": "أربعة عشر"},
+	"15": {"f": "خمس عشرة", "m": "خمسة عشر"},
+	"16": {"f": "ست عشرة", "m": "ستة عشر"},
+	"17": {"f": "سبع عشرة", "m": "سبعة عشر"},
+	"18": {"f": "ثمان عشرة", "m": "ثمانية عشر"},
+	"19": {"f": "تسع عشرة", "m": "تسعة عشر"},
+	"2": {"f": "اثنتان", "m": "اثنان"},
+	"20": {"f": "عشرون", "m": "عشرون"},
+	"200": {"f": "مئتان", "m": "مئتان"},
+	"3": {"f": "ثلاث", "m": "ثلاثة"},
+	"30": {"f": "ثلاثون", "m": "ثلاثون"},
+	"300": {"f": "ثلاثمئة", "m": "ثلاثمئة"},
+	"4": {"f": "أربع", "m": "أربعة"},
+	"40": {"f": "أربعون", "m": "أربعون"},
+	"400": {"f": "أربعمئة", "m": "أربعمئة"},
+	"5": {"f": "خمس", "m": "خمسة"},
+	"50": {"f": "خمسون", "m": "خمسون"},
+	"500": {"f": "خمسمئة", "m": "خمسمئة"},
+	"6": {"f": "ست", "m": "ستة"},
+	"60": {"f": "ستون", "m": "ستون"},
+	"600": {"f": "ستمئة", "m": "ستمئة"},
+	"7": {"f": "سبع", "m": "سبعة"},
+	"70": {"f": "سبعون", "m": "سبعون"},
+	"700": {"f": "سبعمئة", "m": "سبعمئة"},
+	"8": {"f": "ثمان", "m": "ثمانية"},
+	"80": {"f": "ثمانون", "m": "ثمانون"},
+	"800": {"f": "ثمانمئة", "m": "ثمانمئة"},
+	"9": {"f": "تسع", "m": "تسعة"},
+	"90": {"f": "تسعون", "m": "تسعون"},
+	"900": {"f": "تسعمئة", "m": "تسعمئة"},
 }
 
 
@@ -240,7 +199,7 @@ class number2word:
 		#  sex =self.sex
 		returnmsg = ""
 
-		# sex = "male"
+		# sex = "m"
 		# the number word in arabic for masculine and feminine
 
 		# take in charge the different way of writing the thousands and millions ...
@@ -250,10 +209,10 @@ class number2word:
 		#     '4' : list['1' : 'مليار', '2' : 'ملياران', '3' : 'مليارات'] ]
 
 		mf = {
-			"1": "male",
-			"2": "male",
-			"3": "male",
-			"4": "male",
+			"1": "m",
+			"2": "m",
+			"3": "m",
+			"4": "m",
 		}
 		number_length = len(str(number))
 
@@ -278,43 +237,43 @@ class number2word:
 		if number_length == 1:
 			# number=number+'one'
 			if place == 1:
-				returnmsg = returnmsg + words[mf[str(place)]][number]
+				returnmsg = returnmsg + words[number][mf[str(place)]]
 			if place == 2:
 				if int(number) == 1:
 					returnmsg = " ألف"
 				elif int(number) == 2:
 					returnmsg = " ألفان"
 				else:
-					returnmsg = returnmsg + words[mf[str(place)]][number] + " آلاف"
+					returnmsg = returnmsg + words[number][mf[str(place)]] + " آلاف"
 			if place == 3:
 				if int(number) == 1:
 					returnmsg = returnmsg + " مليون"
 				elif int(number) == 2:
 					returnmsg = returnmsg + " مليونان"
 				else:
-					returnmsg = returnmsg + words[mf[str(place)]][number] + " ملايين"
+					returnmsg = returnmsg + words[number][mf[str(place)]] + " ملايين"
 			if place == 4:
 				if int(number) == 1:
 					returnmsg = returnmsg + " مليار"
 				elif int(number) == 2:
 					returnmsg = returnmsg + " ملياران"
 				else:
-					returnmsg = returnmsg + words[mf[str(place)]][number] + " مليارات"
+					returnmsg = returnmsg + words[number][mf[str(place)]] + " مليارات"
 
 		elif number_length == 2:
 			# number=number+'two'
 
-			# if (words[mf[str(place)]][number]):
-			if number in words[mf[str(place)]]:
-				returnmsg = returnmsg + words[mf[str(place)]][number]
+			# if words[number][mf[str(place)]]:
+			if number in words:
+				returnmsg = returnmsg + words[number][mf[str(place)]]
 			else:
 				twoy = int(number[0]) * 10
 				ony = number[1]
 				returnmsg = (
 					returnmsg
-					+ words[mf[str(place)]][ony]
+					+ words[ony][mf[str(place)]]
 					+ " و"
-					+ words[mf[str(place)]][str(twoy)]
+					+ words[str(twoy)][mf[str(place)]]
 				)
 
 			if place == 2:
@@ -326,9 +285,9 @@ class number2word:
 
 		elif number_length == 3:
 			# number=number+'three'
-			# if (words[mf[str(place)]][number]):
-			if str(number) in words[mf[str(place)]]:
-				returnmsg = returnmsg + words[mf[str(place)]][str(number)]
+			# if words[number][mf[str(place)]]:
+			if str(number) in words:
+				returnmsg = returnmsg + words[str(number)][mf[str(place)]]
 
 				if int(number) == 200:
 					returnmsg = " مئتا"
@@ -344,13 +303,13 @@ class number2word:
 
 			threey = int(number[0]) * 100
 			threey = str(threey)
-			if words[mf[str(place)]][threey]:
-				returnmsg = returnmsg + words[mf[str(place)]][threey]
+			if words[threey][mf[str(place)]]:
+				returnmsg = returnmsg + words[threey][mf[str(place)]]
 
 			twoyony = (int(number[1]) * 10) + int(number[2])
 			if int(twoyony) == 2:
 				if place == 1:
-					twoyony = words[mf[str(place)]]["2"]
+					twoyony = words["2"][mf[str(place)]]
 				if place == 2:
 					twoyony = " ألفان"
 				if place == 3:
@@ -366,7 +325,7 @@ class number2word:
 			elif int(twoyony) == 1:
 				twoyony = str(twoyony)
 				if place == 1:
-					twoyony = words[mf[str(place)]]["1"]
+					twoyony = words["1"][mf[str(place)]]
 				if place == 2:
 					twoyony = "ألف"
 				if place == 3:
@@ -380,17 +339,17 @@ class number2word:
 				returnmsg = returnmsg + " " + twoyony
 
 			else:
-				# if ((words[mf[str(place)]][twoyony])):
+				# if words[twoyony][mf[str(place)]]:
 				twoyony = str(twoyony)
-				if twoyony in words[mf[str(place)]]:
+				if twoyony in words:
 					# if words.has_key(twoyony):
-					twoyony = words[mf[str(place)]][twoyony]
+					twoyony = words[twoyony][mf[str(place)]]
 				else:
 					twoy = int(number[1]) * 10
 					twoy = str(twoy)
 					ony = number[2]
 					twoyony = (
-						words[mf[str(place)]][ony] + " و " + words[mf[str(place)]][twoy]
+						words[ony][mf[str(place)]] + " و " + words[twoy][mf[str(place)]]
 					)
 				if twoyony and int(threey) != 0:
 					returnmsg = returnmsg + " و " + twoyony
