@@ -189,11 +189,9 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 		groupNumber := int(groupNumberBig.Int64())
 
 		// convert group into its text
-		// tempNumber -> remaining
 		groupDescription := processArabicGroup(
 			groupNumber,
 			groupLevel,
-			int(number.Int64()),
 			feminine,
 		)
 
@@ -235,7 +233,7 @@ func getDigitFeminineStatus(digit int, groupLevel int, feminine bool) string {
 	return arabicOnes[digit]
 }
 
-func processArabicGroup(groupNumber int, groupLevel int, remaining int, feminine bool) string {
+func processArabicGroup(groupNumber int, groupLevel int, feminine bool) string {
 	tens := groupNumber % 100
 	hundreds := groupNumber / 100
 	result := ""
