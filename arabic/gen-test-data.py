@@ -6,7 +6,7 @@ from ar import convert
 
 # my select of prime numbers: 7, 71, 719, 7121, 71171, 711121, 7113221
 
-with gzip.open("test-data.gz", "wt", encoding="utf-8") as _file:
+with gzip.open("test-data-py.gz", "wt", encoding="utf-8") as _file:
 
 	def add(n: int):
 		n_st = str(n)
