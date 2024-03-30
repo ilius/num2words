@@ -15,7 +15,13 @@ import (
 
 var testData = loadTestData()
 
-func loadTestData() map[string]string {
+type TestCase struct {
+	String string
+	BigInt *big.Int
+	Words  string
+}
+
+func loadTestData() []TestCase {
 	file, err := os.Open("test-data.gz")
 	if err != nil {
 		panic(err)
@@ -26,7 +32,7 @@ func loadTestData() map[string]string {
 		panic(err)
 	}
 	scanner := bufio.NewScanner(zfile)
-	data := map[string]string{}
+	data := []TestCase{}
 	for scanner.Scan() {
 		line := scanner.Text()
 		parts := strings.SplitN(line, "\t", 2)
@@ -34,8 +40,14 @@ func loadTestData() map[string]string {
 			log.Fatalf("bad line: %v", line)
 		}
 		num_str := parts[0]
-		words_expected := parts[1]
-		data[num_str] = words_expected
+		words := parts[1]
+		bn := &big.Int{}
+		bn.SetString(num_str, 10)
+		data = append(data, TestCase{
+			String: num_str,
+			BigInt: bn,
+			Words:  words,
+		})
 	}
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
@@ -44,6 +56,13 @@ func loadTestData() map[string]string {
 }
 
 func TestConvertString(t *testing.T) {
+	is := is.New(t).Lax()
+	for _, tc := range testData {
+		is.Equal(arabic.ConvertString(tc.String), tc.Words)
+	}
+}
+
+func TestConvertString2(t *testing.T) {
 	is := is.New(t).Lax()
 	test := func(num_str string, words []string) {
 		actual_words := strings.Split(arabic.ConvertString(num_str), " ")
@@ -64,10 +83,8 @@ func TestConvertString(t *testing.T) {
 
 func TestConvertBigInt(t *testing.T) {
 	is := is.New(t).Lax()
-	for num_str, words_expected := range testData {
-		bn := &big.Int{}
-		bn.SetString(num_str, 10)
-		is.Equal(arabic.ConvertBigInt(bn), words_expected)
+	for _, tc := range testData {
+		is.Equal(arabic.ConvertBigInt(tc.BigInt), tc.Words)
 	}
 }
 
