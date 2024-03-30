@@ -238,10 +238,36 @@ func ConvertBigInt(number *big.Int) string {
 	return convertBigInt(number, false)
 }
 
-// // num < 1000
-// func convertSmall(num uint16) string {
-
-// }
+// groupNumber < 1000
+func convertStep(groupNumber uint16, groupLevel int, feminine bool, result string) string {
+	// convert group into its text
+	groupDescription := processGroup(groupNumber, groupLevel, feminine)
+	if groupLevel == 0 {
+		return groupDescription
+	}
+	if groupDescription == "" {
+		// groupLevel==1, groupNumber==0
+		return result
+	}
+	if result != "" {
+		result = "و " + result
+	}
+	if groupNumber != 2 && groupNumber%100 != 1 {
+		if groupNumber >= 3 && groupNumber <= 10 {
+			// for numbers between 3 and 9 we use plural name
+			result = group_words[groupLevel].Plural + " " + result
+		} else {
+			if len(result) > 0 {
+				// use appending case
+				result = group_words[groupLevel].Appended + " " + result
+			} else {
+				// use normal case
+				result = group_words[groupLevel].Normal + " " + result
+			}
+		}
+	}
+	return groupDescription + " " + result
+}
 
 func convertBigInt(numberOrig *big.Int, feminine bool) string {
 	if numberOrig.Cmp(big_0) == 0 {
@@ -258,39 +284,8 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 		// separate number into groups
 		groupNumberBig := &big.Int{}
 		number.DivMod(number, big_1000, groupNumberBig)
-		groupNumber := int(groupNumberBig.Int64())
-
-		// convert group into its text
-		groupDescription := processGroup(
-			groupNumber,
-			groupLevel,
-			feminine,
-		)
-
-		// here we add the new converted group to the previous concatenated text
-		if groupDescription != "" {
-			if groupLevel > 0 {
-				if len(result) > 0 {
-					// FIXME: huh??
-					result = "و " + result
-				}
-				if groupNumber != 2 && groupNumber%100 != 1 {
-					if groupNumber >= 3 && groupNumber <= 10 {
-						// for numbers between 3 and 9 we use plural name
-						result = group_words[groupLevel].Plural + " " + result
-					} else {
-						if len(result) > 0 {
-							// use appending case
-							result = group_words[groupLevel].Appended + " " + result
-						} else {
-							// use normal case
-							result = group_words[groupLevel].Normal + " " + result
-						}
-					}
-				}
-			}
-			result = groupDescription + " " + result
-		}
+		groupNumber := uint16(groupNumberBig.Int64())
+		result = convertStep(groupNumber, groupLevel, feminine, result)
 
 		groupLevel++
 	}
@@ -328,9 +323,9 @@ func processTens(tens int, hundreds int, groupLevel int, feminine bool) string {
 	return getDigitWord(ones, groupLevel, feminine) + ar_and + small_words[tens/10*10].Male
 }
 
-func processGroup(groupNumber int, groupLevel int, feminine bool) string {
-	tens := groupNumber % 100
-	hundreds := groupNumber / 100 * 100
+func processGroup(groupNumber uint16, groupLevel int, feminine bool) string {
+	tens := int(groupNumber % 100)
+	hundreds := int(groupNumber / 100 * 100)
 
 	if tens == 0 {
 		if hundreds == 200 && groupLevel > 0 {
