@@ -78,6 +78,8 @@ def convert_thousand(n):
 
 def convert(n):
 	n = str(n)
+	if n == "0":
+		return "Zero"
 	n = n.zfill(12)
 	s = []
 	for i, cat in enumerate(cats):
@@ -110,4 +112,4 @@ if __name__ == "__main__":
 			if k > MAX_NUM:
 				print(f"{k:,}: number can not be more than {MAX_NUM:,}")
 			else:
-				print(f"{k:,}\t{convert(k)}")
+				print(f"{k:,}\n{convert(k)}")
