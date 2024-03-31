@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# File: num2words/en.py
 #
-# Author: Saeed Rasooli <saeed.gnu@gmail.com>    (ilius)
+# Copyright @ 2014-2024 Saeed Rasooli <saeed.gnu@gmail.com> (ilius)
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
