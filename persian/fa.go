@@ -147,6 +147,7 @@ func joinReversed(groups []string, sep string) string {
 	return strings.Join(r_groups, sep)
 }
 
+// n >= 1000
 func convertLarge(groups []uint16) string {
 	k := len(groups)
 	w_groups := []string{}
@@ -202,7 +203,6 @@ func convertSmall(num uint16) string {
 	ones := num % 10
 	tens := (num % 100) / 10
 	hundreds := num / 100
-	ones_tens := 10*tens + ones
 	result := ""
 	if hundreds != 0 {
 		word, ok := small_words[hundreds*100]
@@ -216,7 +216,7 @@ func convertSmall(num uint16) string {
 		}
 	}
 	if tens != 0 {
-		word, ok := small_words[ones_tens]
+		word, ok := small_words[num%100]
 		if ok {
 			result += word
 			return result // OK, Done
@@ -234,29 +234,29 @@ func convertSmall(num uint16) string {
 
 // ConvertString: only for non-negative integers
 func ConvertString(str string) (string, error) {
-	if len(str) > 3 {
-		groups, err := extractGroupsByString(str)
+	if len(str) <= 3 { // n <= 999
+		n_i64, err := strconv.ParseUint(str, 10, 64)
 		if err != nil {
 			return "", err
 		}
-		return convertLarge(groups), nil
+		return convertSmall(uint16(n_i64)), nil
 	}
-	// now assume that n <= 999
-	n_i64, err := strconv.ParseUint(str, 10, 64)
+	// n >= 1000
+	groups, err := extractGroupsByString(str)
 	if err != nil {
 		return "", err
 	}
-	return convertSmall(uint16(n_i64)), nil
+	return convertLarge(groups), nil
 }
 
 // ConvertBigInt: only for non-negative integers
 func ConvertBigInt(bn *big.Int) string {
 	digitCount := bigIntCountDigits(bn.Bytes())
-	if digitCount > 3 {
-		return convertLarge(extractGroupsByBigInt(bn, digitCount))
+	if digitCount <= 3 { // n <= 999
+		return convertSmall(uint16(bn.Uint64()))
 	}
-	// now assume that bn <= 999
-	return convertSmall(uint16(bn.Uint64()))
+	// n >= 1000
+	return convertLarge(extractGroupsByBigInt(bn, digitCount))
 }
 
 func ConvertBigIntSigned(bn *big.Int) string {
