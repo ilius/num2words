@@ -164,8 +164,7 @@ func convertLarge(groups []uint16) string {
 				order = big_words[m] + order
 			}
 		}
-		w_group := convertSmall(p) + " " + order
-		w_groups = append(w_groups, w_group)
+		w_groups = append(w_groups, convertSmall(p)+" "+order)
 	}
 	return joinReversed(w_groups, en_and)
 }
