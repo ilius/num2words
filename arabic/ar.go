@@ -4,6 +4,7 @@ package arabic
 
 import (
 	"math/big"
+	"strconv"
 	"strings"
 )
 
@@ -228,14 +229,39 @@ var group_words = []GroupWord{
 	},
 }
 
-func ConvertString(number string) string {
-	num_big := &big.Int{}
-	num_big.SetString(number, 10)
-	return convertBigInt(num_big, false)
+func ConvertString(number string) (string, error) {
+	if number == "0" {
+		return ar_zero, nil
+	}
+	groups, err := extractGroupsByString(number)
+	if err != nil {
+		return "", err
+	}
+	result := []string{}
+	for _, group := range groups {
+		groupResult := convertGroup(group, false, len(result) > 0)
+		if groupResult == "" {
+			continue
+		}
+		result = append([]string{groupResult}, result...)
+	}
+	return strings.Join(result, ar_and), nil
 }
 
 func ConvertBigInt(number *big.Int) string {
-	return convertBigInt(number, false)
+	if number.Cmp(big_0) == 0 {
+		return ar_zero
+	}
+	groups := extractGroupsByBigInt(number.Bytes())
+	result := []string{}
+	for _, group := range groups {
+		groupResult := convertGroup(group, false, len(result) > 0)
+		if groupResult == "" {
+			continue
+		}
+		result = append([]string{groupResult}, result...)
+	}
+	return strings.Join(result, ar_and)
 }
 
 type Group struct {
@@ -269,7 +295,7 @@ func convertGroup(group Group, feminine bool, appending bool) string {
 	return groupDescription
 }
 
-func extractGroups(numberBytes []byte) []Group {
+func extractGroupsByBigInt(numberBytes []byte) []Group {
 	number := &big.Int{}
 	number.SetBytes(numberBytes)
 	groups := []Group{}
@@ -284,21 +310,32 @@ func extractGroups(numberBytes []byte) []Group {
 	return groups
 }
 
-func convertBigInt(numberOrig *big.Int, feminine bool) string {
-	if numberOrig.Cmp(big_0) == 0 {
-		return ar_zero
-	}
-	// separate number into groups
-	groups := extractGroups(numberOrig.Bytes())
-	result := []string{}
-	for _, group := range groups {
-		groupResult := convertGroup(group, feminine, len(result) > 0)
-		if groupResult == "" {
-			continue
+func extractGroupsByString(numStr string) ([]Group, error) {
+	digitCount := len(numStr)
+	groupCount := digitCount / 3
+	groups := []Group{}
+	for i := range groupCount {
+		p_int, err := strconv.ParseUint(numStr[digitCount-3*i-3:digitCount-3*i], 10, 64)
+		if err != nil {
+			return nil, err
 		}
-		result = append([]string{groupResult}, result...)
+		groups = append(groups, Group{
+			number: uint16(p_int),
+			level:  uint64(len(groups)),
+		})
 	}
-	return strings.Join(result, ar_and)
+	m := digitCount % 3
+	if m > 0 {
+		p_int, err := strconv.ParseUint(numStr[:m], 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		groups = append(groups, Group{
+			number: uint16(p_int),
+			level:  uint64(len(groups)),
+		})
+	}
+	return groups, nil
 }
 
 func getDigitWord(digit uint16, groupLevel uint64, feminine bool) string {

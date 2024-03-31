@@ -58,14 +58,18 @@ func loadTestData() []TestCase {
 func TestConvertString(t *testing.T) {
 	is := is.New(t).Lax()
 	for _, tc := range testData {
-		is.Equal(arabic.ConvertString(tc.String), tc.Words)
+		words, err := arabic.ConvertString(tc.String)
+		is.NotErr(err)
+		is.Equal(words, tc.Words)
 	}
 }
 
 func TestConvertString2(t *testing.T) {
 	is := is.New(t).Lax()
 	test := func(num_str string, words []string) {
-		actual_words := strings.Split(arabic.ConvertString(num_str), " ")
+		actual_words_str, err := arabic.ConvertString(num_str)
+		is.NotErr(err)
+		actual_words := strings.Split(actual_words_str, " ")
 		is.Equal(actual_words, words)
 	}
 	words := strings.Split(strings.ReplaceAll(`تسعة سكستيليونات 
