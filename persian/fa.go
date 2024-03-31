@@ -85,12 +85,12 @@ var big_words = append(
 	"تریلیون",
 )
 
-func splitGroups(st string) ([]uint16, error) {
-	digitCount := len(st)
+func extractGroupsByString(numStr string) ([]uint16, error) {
+	digitCount := len(numStr)
 	groupCount := digitCount / 3
 	groups := make([]uint16, groupCount)
 	for i := range groupCount {
-		p_int, err := strconv.ParseUint(st[digitCount-3*i-3:digitCount-3*i], 10, 64)
+		p_int, err := strconv.ParseUint(numStr[digitCount-3*i-3:digitCount-3*i], 10, 64)
 		if err != nil {
 			return nil, err
 		}
@@ -98,7 +98,7 @@ func splitGroups(st string) ([]uint16, error) {
 	}
 	m := digitCount % 3
 	if m > 0 {
-		p_int, err := strconv.ParseUint(st[:m], 10, 64)
+		p_int, err := strconv.ParseUint(numStr[:m], 10, 64)
 		if err != nil {
 			return nil, err
 		}
@@ -121,7 +121,7 @@ func bigIntCountDigits(bnBytes []byte) int {
 	return count
 }
 
-func splitGroupsBigInt(bn *big.Int, digitCount int) []uint16 {
+func extractGroupsByBigInt(bn *big.Int, digitCount int) []uint16 {
 	groupCount := digitCount / 3
 	groups := make([]uint16, groupCount)
 	for i := range groupCount {
@@ -235,7 +235,7 @@ func convertSmall(num uint16) string {
 // ConvertString: only for non-negative integers
 func ConvertString(str string) (string, error) {
 	if len(str) > 3 {
-		groups, err := splitGroups(str)
+		groups, err := extractGroupsByString(str)
 		if err != nil {
 			return "", err
 		}
@@ -253,7 +253,7 @@ func ConvertString(str string) (string, error) {
 func ConvertBigInt(bn *big.Int) string {
 	digitCount := bigIntCountDigits(bn.Bytes())
 	if digitCount > 3 {
-		return convertLarge(splitGroupsBigInt(bn, digitCount))
+		return convertLarge(extractGroupsByBigInt(bn, digitCount))
 	}
 	// now assume that bn <= 999
 	return convertSmall(uint16(bn.Uint64()))
