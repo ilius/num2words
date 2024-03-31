@@ -23,7 +23,7 @@ type SmallWord struct {
 	Female string
 }
 
-var small_words = map[int]SmallWord{
+var small_words = map[uint16]SmallWord{
 	1: {
 		Male:   "واحد",
 		Female: "إحدى",
@@ -293,14 +293,14 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 	return strings.TrimSpace(result)
 }
 
-func getDigitWord(digit int, groupLevel int, feminine bool) string {
+func getDigitWord(digit uint16, groupLevel int, feminine bool) string {
 	if feminine && (groupLevel == -1 || groupLevel == 0) {
 		return small_words[digit].Female
 	}
 	return small_words[digit].Male
 }
 
-func processTens(tens int, hundreds int, groupLevel int, feminine bool) string {
+func processTens(tens uint16, hundreds uint16, groupLevel int, feminine bool) string {
 	if tens < 20 {
 		// if we are processing under 20 numbers
 		if tens == 2 && hundreds == 0 && groupLevel > 0 {
@@ -319,33 +319,22 @@ func processTens(tens int, hundreds int, groupLevel int, feminine bool) string {
 	if ones == 0 {
 		return small_words[tens].Male
 	}
-
 	return getDigitWord(ones, groupLevel, feminine) + ar_and + small_words[tens/10*10].Male
 }
 
 func processGroup(groupNumber uint16, groupLevel int, feminine bool) string {
-	tens := int(groupNumber % 100)
-	hundreds := int(groupNumber / 100 * 100)
-
+	tens := groupNumber % 100
+	hundreds := groupNumber / 100 * 100
+	if hundreds == 0 {
+		return processTens(tens, hundreds, groupLevel, feminine)
+	}
 	if tens == 0 {
 		if hundreds == 200 && groupLevel > 0 {
-			// Genitive case: حالة المضاف
+			// genitive case - حالة المضاف
 			return group_words[0].Genitive
 		}
 		return small_words[hundreds].Male
 	}
-
-	result := ""
-	if hundreds > 0 {
-		// الحالة العادية
-		result = small_words[hundreds].Male
-	}
-
-	tmp_result := processTens(tens, hundreds, groupLevel, feminine)
-	if result != "" {
-		result += ar_and
-	}
-	result += tmp_result
-
-	return result
+	// normal case - الحالة العادية
+	return small_words[hundreds].Male + ar_and + processTens(tens, hundreds, groupLevel, feminine)
 }
