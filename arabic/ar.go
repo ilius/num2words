@@ -238,59 +238,67 @@ func ConvertBigInt(number *big.Int) string {
 	return convertBigInt(number, false)
 }
 
+type Group struct {
+	level  int
+	number uint16
+}
+
 // groupNumber < 1000
-func convertStep(groupNumber uint16, groupLevel int, feminine bool, result string) string {
+func convertGroup(group Group, feminine bool, appending bool) string {
 	// convert group into its text
-	groupDescription := processGroup(groupNumber, groupLevel, feminine)
-	if groupLevel == 0 {
+	groupDescription := processGroup(group, feminine)
+	if groupDescription == "" {
+		return ""
+	}
+	if group.level == 0 {
 		return groupDescription
 	}
-	if groupDescription == "" {
-		// groupLevel==1, groupNumber==0
-		return result
-	}
-	if result != "" {
-		result = "و " + result
-	}
-	if groupNumber != 2 && groupNumber%100 != 1 {
-		if groupNumber >= 3 && groupNumber <= 10 {
+	if group.number != 2 && group.number%100 != 1 {
+		if group.number >= 3 && group.number <= 10 {
 			// for numbers between 3 and 9 we use plural name
-			result = group_words[groupLevel].Plural + " " + result
-		} else {
-			if len(result) > 0 {
-				// use appending case
-				result = group_words[groupLevel].Appended + " " + result
-			} else {
-				// use normal case
-				result = group_words[groupLevel].Normal + " " + result
-			}
+			return groupDescription + " " + group_words[group.level].Plural
 		}
+		if appending {
+			// use appending case
+			return groupDescription + " " + group_words[group.level].Appended
+		}
+		// use normal case
+		return groupDescription + " " + group_words[group.level].Normal
+
 	}
-	return groupDescription + " " + result
+	return groupDescription
+}
+
+func extractGroups(numberBytes []byte) []Group {
+	number := &big.Int{}
+	number.SetBytes(numberBytes)
+	groups := []Group{}
+	for number.Cmp(big_1) >= 0 {
+		groupNumberBig := &big.Int{}
+		number.DivMod(number, big_1000, groupNumberBig)
+		groups = append(groups, Group{
+			number: uint16(groupNumberBig.Int64()),
+			level:  len(groups),
+		})
+	}
+	return groups
 }
 
 func convertBigInt(numberOrig *big.Int, feminine bool) string {
 	if numberOrig.Cmp(big_0) == 0 {
 		return ar_zero
 	}
-
-	number := &big.Int{}
-	number.SetBytes(numberOrig.Bytes())
-
-	result := ""
-	groupLevel := 0
-
-	for number.Cmp(big_1) >= 0 {
-		// separate number into groups
-		groupNumberBig := &big.Int{}
-		number.DivMod(number, big_1000, groupNumberBig)
-		groupNumber := uint16(groupNumberBig.Int64())
-		result = convertStep(groupNumber, groupLevel, feminine, result)
-
-		groupLevel++
+	// separate number into groups
+	groups := extractGroups(numberOrig.Bytes())
+	result := []string{}
+	for _, group := range groups {
+		groupResult := convertGroup(group, feminine, len(result) > 0)
+		if groupResult == "" {
+			continue
+		}
+		result = append([]string{groupResult}, result...)
 	}
-
-	return strings.TrimSpace(result)
+	return strings.Join(result, ar_and)
 }
 
 func getDigitWord(digit uint16, groupLevel int, feminine bool) string {
@@ -322,19 +330,19 @@ func processTens(tens uint16, hundreds uint16, groupLevel int, feminine bool) st
 	return getDigitWord(ones, groupLevel, feminine) + ar_and + small_words[tens/10*10].Male
 }
 
-func processGroup(groupNumber uint16, groupLevel int, feminine bool) string {
-	tens := groupNumber % 100
-	hundreds := groupNumber / 100 * 100
+func processGroup(group Group, feminine bool) string {
+	tens := group.number % 100
+	hundreds := group.number / 100 * 100
 	if hundreds == 0 {
-		return processTens(tens, hundreds, groupLevel, feminine)
+		return processTens(tens, hundreds, group.level, feminine)
 	}
 	if tens == 0 {
-		if hundreds == 200 && groupLevel > 0 {
+		if hundreds == 200 && group.level > 0 {
 			// genitive case - حالة المضاف
 			return group_words[0].Genitive
 		}
 		return small_words[hundreds].Male
 	}
 	// normal case - الحالة العادية
-	return small_words[hundreds].Male + ar_and + processTens(tens, hundreds, groupLevel, feminine)
+	return small_words[hundreds].Male + ar_and + processTens(tens, hundreds, group.level, feminine)
 }

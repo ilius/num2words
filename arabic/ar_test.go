@@ -84,7 +84,7 @@ func TestConvertString2(t *testing.T) {
 func TestConvertBigInt(t *testing.T) {
 	is := is.New(t).Lax()
 	for _, tc := range testData {
-		is.Equal(arabic.ConvertBigInt(tc.BigInt), tc.Words)
+		is.Msg("number=%v", tc.String).Equal(arabic.ConvertBigInt(tc.BigInt), tc.Words)
 	}
 }
 
