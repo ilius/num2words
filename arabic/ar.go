@@ -239,7 +239,7 @@ func ConvertBigInt(number *big.Int) string {
 }
 
 type Group struct {
-	level  int
+	level  uint64
 	number uint16
 }
 
@@ -278,7 +278,7 @@ func extractGroups(numberBytes []byte) []Group {
 		number.DivMod(number, big_1000, groupNumberBig)
 		groups = append(groups, Group{
 			number: uint16(groupNumberBig.Int64()),
-			level:  len(groups),
+			level:  uint64(len(groups)),
 		})
 	}
 	return groups
@@ -301,14 +301,14 @@ func convertBigInt(numberOrig *big.Int, feminine bool) string {
 	return strings.Join(result, ar_and)
 }
 
-func getDigitWord(digit uint16, groupLevel int, feminine bool) string {
-	if feminine && (groupLevel == -1 || groupLevel == 0) {
+func getDigitWord(digit uint16, groupLevel uint64, feminine bool) string {
+	if feminine && groupLevel == 0 {
 		return small_words[digit].Female
 	}
 	return small_words[digit].Male
 }
 
-func processTens(tens uint16, hundreds uint16, groupLevel int, feminine bool) string {
+func processTens(tens uint16, hundreds uint16, groupLevel uint64, feminine bool) string {
 	if tens < 20 {
 		// if we are processing under 20 numbers
 		if tens == 2 && hundreds == 0 && groupLevel > 0 {
