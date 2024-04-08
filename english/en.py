@@ -13,102 +13,169 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # Lesser General Public License for more details.
 
-
 import sys
 
-MAX_NUM = 10**12 - 1
+en_and     = ", "
+en_zero    = "Zero"
+en_hundred = "Hundred"
 
-digit_text = {
-	"00": "Zero",
-	"01": "One",
-	"02": "Two",
-	"03": "Three",
-	"04": "Four",
-	"05": "Five",
-	"06": "Six",
-	"07": "Seven",
-	"08": "Eight",
-	"09": "Nine",
-	"10": "Ten",
-	"11": "Eleven",
-	"12": "Twelve",
-	"13": "Thirteen",
-	"14": "Fourteen",
-	"15": "Fifteen",
-	"16": "Sixteen",
-	"17": "Seventeen",
-	"18": "Eighteen",
-	"19": "Nineteen",
-	"20": "Twenty",
-	"30": "Thirty",
-	"40": "Forty",
-	"50": "Fifty",
-	"60": "Sixty",
-	"70": "Seventy",
-	"80": "Eighty",
-	"90": "Ninety",
+small_words = {
+	0:  en_zero,
+	1:  "One",
+	2:  "Two",
+	3:  "Three",
+	4:  "Four",
+	5:  "Five",
+	6:  "Six",
+	7:  "Seven",
+	8:  "Eight",
+	9:  "Nine",
+	10: "Ten",
+	11: "Eleven",
+	12: "Twelve",
+	13: "Thirteen",
+	14: "Fourteen",
+	15: "Fifteen",
+	16: "Sixteen",
+	17: "Seventeen",
+	18: "Eighteen",
+	19: "Nineteen",
+	20: "Twenty",
+	30: "Thirty",
+	40: "Forty",
+	50: "Fifty",
+	60: "Sixty",
+	70: "Seventy",
+	80: "Eighty",
+	90: "Ninety",
 }
 
-cats = ["Billion", "Million", "Thousand"]
+big_words = [
+	"One",
+	"Thousand",
+	"Million",
+	"Billion",
+]
+
+def extractGroupsByString(numStr: str) -> list[int]:
+	digitCount = len(numStr)
+	groupCount = digitCount // 3
+	groups = [
+		int(numStr[digitCount-3*i-3:digitCount-3*i])
+		for i in range(groupCount)
+	]
+	m = digitCount % 3
+	if m > 0:
+		groups.append(int(numStr[:m]))
+	return groups
 
 
-def convert_hundred(n):
-	n = str(n)
-	if len(n) < 2:
-		n = "0" + n
-	if n[0] == "1" or n[1] == "0":
-		return digit_text[n]
-	if int(n) < 10:
-		return digit_text["0" + n[1]]
-	return digit_text[n[0] + "0"] + " " + digit_text["0" + n[1]]
+def bigIntCountDigits(bn: int) -> int:
+	if bn == 0:
+		return 1
+	count = 0
+	while bn != 0:
+		bn = bn // 10
+		count += 1
+	return count
 
 
-def convert_thousand(n):
-	assert n < 1000
-	if n < 10:
-		return digit_text["0" + str(n)]
-	if n < 100:
-		return convert_hundred(n)
-	n = str(n)
-	if n[1:] == "00":
-		return f"{digit_text['0' + n[0]]} Hundred"
-	return f"{digit_text['0' + n[0]]} Hundred {convert_hundred(int(n[1:]))}"
+def extractGroupsByBigInt(bn: int, digitCount: int) -> list[int]:
+	groupCount = digitCount // 3
+	groups = [0] * groupCount
+	for i in range(groupCount):
+		div, mod = divmod(bn, 1000)
+		groups[i] = mod
+		bn = div
+	m = digitCount % 3
+	if m > 0:
+		groups.append(bn)
+	return groups
 
 
-def convert(n):
-	n = str(n)
-	if n == "0":
-		return "Zero"
-	n = n.zfill(12)
-	s = []
-	for i, cat in enumerate(cats):
-		start, end = i * 3, (i + 1) * 3
-		if int(n[start:end]) > 0:
-			s.append(convert_thousand(int(n[start:end])) + " " + cat)
-	if int(n[-3:]) > 0:
-		s.append(convert_thousand(int(n[-3:])))
-	if s:
-		return ", ".join(s)
-	return None
+
+# n >= 1000
+def convertLarge(groups: list[int]) -> str:
+	k = len(groups)
+	w_groups: list[str] = []
+	for i in range(k):
+		p = groups[i]
+		if p == 0:
+			continue
+		if i == 0:
+			w_groups.append(convertSmall(p))
+			continue
+		order = ""
+		if i < len(big_words):
+			order = big_words[i]
+		else:
+			order = ""
+			d = i // 3
+			m = i % 3
+			t9 = big_words[3]
+			for j in range(d):
+				if j > 0:
+					order += " "
+				order += t9
+			if m != 0:
+				if order != "":
+					order = " " + order
+				order = big_words[m] + order
+		w_groups.append(convertSmall(p)+" "+order)
+	return en_and.join(reversed(w_groups))
 
 
-def testRandom():
-	import random
+# num < 1000
+def convertSmall(num: int) -> str:
+	if num in small_words:
+		return small_words[num]
+	ones = num % 10
+	tens = (num % 100) // 10
+	hundreds = num // 100
+	result = ""
+	if hundreds != 0:
+		result += small_words[hundreds] + " " + en_hundred
+		if tens != 0 or ones != 0:
+			result += " "
+	if tens != 0:
+		word = small_words.get(num%100)
+		if word is not None:
+			result += word
+			return result # OK, Done
+		result += small_words[tens*10]
+		if ones != 0:
+			result += " "
+	if ones != 0:
+		result += small_words[ones]
+	return result
 
-	k = random.randrange(999999999999)
-	print(k)
-	print(convert(k))
+
+# ConvertString: only for non-negative integers
+def convert_string(st: str) -> str:
+	if len(st) <= 3: # n <= 999
+		return convertSmall(int(st))
+	# n >= 1000
+	return convertLarge(extractGroupsByString(st))
+
+
+# convert_int: only for non-negative integers
+def convert_int(bn: int) -> str:
+	if bn < 0:
+		return "Negative " + convert_int(abs(bn))
+	digitCount = bigIntCountDigits(bn)
+	if digitCount <= 3: # n <= 999
+		return convertSmall(bn)
+	# n >= 1000
+	return convertLarge(extractGroupsByBigInt(bn, digitCount))
 
 
 if __name__ == "__main__":
 	for arg in sys.argv[1:]:
 		arg = arg.replace(",", "")
+		print(f"{arg}\n{convert_string(arg)}")
 		try:
 			k = int(arg)
 		except ValueError:  # noqa: PERF203
 			print(f"{arg}: non-numeric argument")
 		else:
-			if k > MAX_NUM:
-				print(f"{k:,}: number can not be more than {MAX_NUM:,}")
-			else:
-				print(f"{k:,}\n{convert(k)}")
+			print(f"{k:,}\n{convert_int(k)}")
