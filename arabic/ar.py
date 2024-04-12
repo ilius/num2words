@@ -127,7 +127,6 @@ class SmallWord(typing.NamedTuple):
 # ]
 
 
-
 words = {
 	"0": SmallWord(
 		male="",

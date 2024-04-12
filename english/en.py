@@ -15,8 +15,8 @@
 
 import sys
 
-en_and     = ", "
-en_zero    = "Zero"
+en_and = ", "
+en_zero = "Zero"
 en_hundred = "Hundred"
 
 small_words = {
@@ -57,11 +57,12 @@ big_words = [
 	"Billion",
 ]
 
+
 def extractGroupsByString(numStr: str) -> list[int]:
 	digitCount = len(numStr)
 	groupCount = digitCount // 3
 	groups = [
-		int(numStr[digitCount-3*i-3:digitCount-3*i])
+		int(numStr[digitCount - 3 * i - 3:digitCount - 3 * i])
 		for i in range(groupCount)
 	]
 	m = digitCount % 3
@@ -93,7 +94,6 @@ def extractGroupsByBigInt(bn: int, digitCount: int) -> list[int]:
 	return groups
 
 
-
 # n >= 1000
 def convertLarge(groups: list[int]) -> str:
 	k = len(groups)
@@ -121,7 +121,7 @@ def convertLarge(groups: list[int]) -> str:
 				if order != "":
 					order = " " + order
 				order = big_words[m] + order
-		w_groups.append(convertSmall(p)+" "+order)
+		w_groups.append(convertSmall(p) + " " + order)
 	return en_and.join(reversed(w_groups))
 
 
@@ -138,11 +138,11 @@ def convertSmall(num: int) -> str:
 		if tens != 0 or ones != 0:
 			result += " "
 	if tens != 0:
-		word = small_words.get(num%100)
+		word = small_words.get(num % 100)
 		if word is not None:
 			result += word
-			return result # OK, Done
-		result += small_words[tens*10]
+			return result  # OK, Done
+		result += small_words[tens * 10]
 		if ones != 0:
 			result += " "
 	if ones != 0:
@@ -152,7 +152,7 @@ def convertSmall(num: int) -> str:
 
 # ConvertString: only for non-negative integers
 def convert_string(st: str) -> str:
-	if len(st) <= 3: # n <= 999
+	if len(st) <= 3:  # n <= 999
 		return convertSmall(int(st))
 	# n >= 1000
 	return convertLarge(extractGroupsByString(st))
@@ -163,7 +163,7 @@ def convert_int(bn: int) -> str:
 	if bn < 0:
 		return "Negative " + convert_int(abs(bn))
 	digitCount = bigIntCountDigits(bn)
-	if digitCount <= 3: # n <= 999
+	if digitCount <= 3:  # n <= 999
 		return convertSmall(bn)
 	# n >= 1000
 	return convertLarge(extractGroupsByBigInt(bn, digitCount))
