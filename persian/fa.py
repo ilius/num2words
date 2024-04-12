@@ -168,13 +168,7 @@ def convertSmall(n: int) -> str:
 	return fa
 
 
-def convert(st):
-	if isinstance(st, int):
-		st = str(st)
-	elif not isinstance(st, str):
-		raise TypeError("bad type {type(st)!r}")
-	if st == "0":
-		return fa_zero
+def convert_str(st):
 	if len(st) > 3:
 		return convertLarge(extractGroupsByString(st))
 
@@ -206,7 +200,7 @@ def convert_ordinal(arg):
 		return "اول"  # or "یکم"
 	if num == 10:
 		return "دهم"
-	norm_fa = convert(st)
+	norm_fa = convert_str(st)
 	if not norm_fa:
 		return ""
 	if norm_fa.endswith("ی"):
@@ -226,4 +220,4 @@ if __name__ == "__main__":
 		except ValueError:  # noqa: PERF203
 			print(f"{arg}: non-numeric argument")
 		else:
-			print(f"{k:,}\n{convert(k)}\n{convert_ordinal(k)}\n")
+			print(f"{k:,}\n{convert_str(k)}\n{convert_ordinal(k)}\n")
