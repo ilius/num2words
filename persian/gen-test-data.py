@@ -2,16 +2,15 @@
 
 import gzip
 
-from fa import convert_str
+from fa import convert_int
 
 # my select of prime numbers: 7, 71, 719, 7121, 71171, 711121, 7113221
 
 with gzip.open("test-data.gz", "wt", encoding="utf-8") as _file:
 
 	def add(n: int):
-		n_st = str(n)
-		w_st = convert_str(n_st)
-		_file.write(f"{n_st}\t{w_st}\n")
+		w_st = convert_int(n)
+		_file.write(f"{n}\t{w_st}\n")
 
 	for n in range(100):
 		add(n)
