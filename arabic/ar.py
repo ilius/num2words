@@ -497,7 +497,8 @@ def convert(st: str) -> str:
 	return number2word(int(st)).to_string()
 
 
-for arg in sys.argv[1:]:
-	number = int(arg)
-	num = number2word(number)
-	print(num.to_string())
+if __name__ == "__main__":
+	for arg in sys.argv[1:]:
+		number = int(arg)
+		num = number2word(number)
+		print(num.to_string())
