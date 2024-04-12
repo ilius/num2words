@@ -4,7 +4,7 @@ import unittest
 from os.path import abspath, dirname
 
 sys.path.insert(0, dirname(abspath(__file__)))
-from fa import convert
+from fa import convert, convert_int
 
 
 def loadTestData() -> list[tuple[str, int, str]]:
@@ -31,9 +31,9 @@ class TestConvertByTestData(unittest.TestCase):
 		for num_str, _num, words in self.testData:
 			self.assertEqual(convert(num_str), words)
 
-	# def test_convert_int(self):
-	# 	for _num_str, num, words in self.testData:
-	# 		self.assertEqual(convert_int(num), words)
+	def test_convert_int(self):
+		for _num_str, num, words in self.testData:
+			self.assertEqual(convert_int(num), words)
 
 
 if __name__ == "__main__":

@@ -74,7 +74,7 @@ faBigNumIran = faBigNumFirst + ["میلیارد", "تریلیون"]
 faBigNum = faBigNumIran
 
 
-def split3(st):
+def extractGroupsByString(st):
 	n = len(st)
 	d, m = divmod(n, 3)
 	parts = [int(st[n - 3 * i - 3 : n - 3 * i]) for i in range(d)]
@@ -83,44 +83,64 @@ def split3(st):
 	return parts
 
 
-def convert(st):
-	if isinstance(st, int):
-		st = str(st)
-	elif not isinstance(st, str):
-		raise TypeError("bad type {type(st)!r}")
-	if st == "0":
-		return fa_zero
-	if len(st) > 3:
-		parts = split3(st)
-		k = len(parts)
-		wparts = []
-		for i in range(k):
-			faOrder = ""
-			p = parts[i]
-			if p == 0:
-				continue
-			if i == 0:
-				wpart = convert(p)
+def bigIntCountDigits(bn: int) -> int:
+	if bn == 0:
+		return 1
+	count = 0
+	while bn != 0:
+		bn = bn // 10
+		count += 1
+	return count
+
+
+def extractGroupsByBigInt(bn: int, digitCount: int) -> list[int]:
+	groupCount = digitCount // 3
+	groups = [0] * groupCount
+	for i in range(groupCount):
+		div, mod = divmod(bn, 1000)
+		groups[i] = mod
+		bn = div
+	m = digitCount % 3
+	if m > 0:
+		groups.append(bn)
+	return groups
+
+
+# n >= 1000
+def convertLarge(groups: list[int]) -> str:
+	k = len(groups)
+	w_groups = []
+	for i in range(k):
+		faOrder = ""
+		p = groups[i]
+		if p == 0:
+			continue
+		if i == 0:
+			wpart = convertSmall(p)
+		else:
+			if i < len(faBigNum):
+				faOrder = faBigNum[i]
 			else:
-				if i < len(faBigNum):
-					faOrder = faBigNum[i]
-				else:
-					faOrder = ""
-					d, m = divmod(i, 3)
-					t9 = faBigNum[3]
-					for j in range(d):
-						if j > 0:
-							faOrder += "‌"
-						faOrder += t9
-					if m != 0:
-						if faOrder != "":
-							faOrder = "‌" + faOrder
-						faOrder = faBigNum[m] + faOrder
-				wpart = faOrder if i == 1 and p == 1 else convert(p) + " " + faOrder
-			wparts.append(wpart)
-		return " و ".join(reversed(wparts))
-	# now assume that n <= 999
-	n = int(st)
+				faOrder = ""
+				d, m = divmod(i, 3)
+				t9 = faBigNum[3]
+				for j in range(d):
+					if j > 0:
+						faOrder += "‌"
+					faOrder += t9
+				if m != 0:
+					if faOrder != "":
+						faOrder = "‌" + faOrder
+					faOrder = faBigNum[m] + faOrder
+			wpart = faOrder if i == 1 and p == 1 else convertSmall(p) + " " + faOrder
+		w_groups.append(wpart)
+	return " و ".join(reversed(w_groups))
+
+
+# num < 1000
+def convertSmall(n: int) -> str:
+	if n == 0:
+		return fa_zero
 	if n in faBaseNumKeys:
 		return faBaseNum[n]
 	y = n % 10
@@ -146,6 +166,31 @@ def convert(st):
 	if y != 0:
 		fa += faBaseNum[y]
 	return fa
+
+
+def convert(st):
+	if isinstance(st, int):
+		st = str(st)
+	elif not isinstance(st, str):
+		raise TypeError("bad type {type(st)!r}")
+	if st == "0":
+		return fa_zero
+	if len(st) > 3:
+		return convertLarge(extractGroupsByString(st))
+
+	# now assume that n <= 999
+	return convertSmall(int(st))
+
+
+# convert_int: only for non-negative integers
+def convert_int(bn: int) -> str:
+	if bn < 0:
+		return "Negative " + convert_int(abs(bn))
+	digitCount = bigIntCountDigits(bn)
+	if digitCount <= 3:  # n <= 999
+		return convertSmall(bn)
+	# n >= 1000
+	return convertLarge(extractGroupsByBigInt(bn, digitCount))
 
 
 def convert_ordinal(arg):
