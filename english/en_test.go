@@ -96,12 +96,12 @@ func TestConvertBigIntSigned(t *testing.T) {
 func Benchmark_convert_string_bigInt(b *testing.B) {
 	b.Run("string", func(b *testing.B) {
 		for _, tc := range testData {
-			english.ConvertString(tc.String)
+			_, _ = english.ConvertString(tc.String)
 		}
 	})
 	b.Run("big.Int", func(b *testing.B) {
 		for _, tc := range testData {
-			english.ConvertBigInt(tc.BigInt)
+			_ = english.ConvertBigInt(tc.BigInt)
 		}
 	})
 }
