@@ -467,7 +467,14 @@ def convert_int(num: int) -> str:
 def convert_string(st: str) -> str:
 	if st == "0":
 		return ar_zero
-	return convert_int(int(st))  # FIXME
+	groups = extractGroupsByString(st)
+	result: list[str] = []
+	for group in groups:
+		groupResult = convertGroup(group, False, len(result) > 0)
+		if groupResult == "":
+			continue
+		result = [groupResult] + result
+	return ar_and.join(result)
 
 
 if __name__ == "__main__":
