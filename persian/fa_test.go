@@ -13,7 +13,10 @@ import (
 	"github.com/ilius/num2words/persian"
 )
 
-var testData = loadTestData()
+var (
+	testData        = loadTestData("test-data.gz")
+	ordinalTestData = loadTestData("test-data-ordinal.gz")
+)
 
 type TestCase struct {
 	String string
@@ -21,8 +24,8 @@ type TestCase struct {
 	Words  string
 }
 
-func loadTestData() []TestCase {
-	file, err := os.Open("test-data.gz")
+func loadTestData(fname string) []TestCase {
+	file, err := os.Open(fname)
 	if err != nil {
 		panic(err)
 	}
@@ -74,6 +77,24 @@ func TestConvertBigInt(t *testing.T) {
 	is := is.New(t)
 	for _, tc := range testData {
 		is.Equal(persian.ConvertBigInt(tc.BigInt), tc.Words)
+	}
+}
+
+func TestConvertOrdinalString(t *testing.T) {
+	is := is.New(t)
+	for _, tc := range ordinalTestData {
+		words, err := persian.ConvertOrdinalString(tc.String)
+		if err != nil {
+			log.Fatal(err)
+		}
+		is.Msg("num", tc.String).Equal(words, tc.Words)
+	}
+}
+
+func TestConvertOrdinalBigInt(t *testing.T) {
+	is := is.New(t)
+	for _, tc := range ordinalTestData {
+		is.Equal(persian.ConvertOrdinalBigInt(tc.BigInt), tc.Words)
 	}
 }
 

@@ -278,6 +278,17 @@ func ConvertBigIntSigned(bn *big.Int) string {
 	return ConvertBigInt(bn)
 }
 
+func addOrdinalSuffix(result string) string {
+	if strings.HasSuffix(result, "ی") {
+		return result + "\u200cام"
+	}
+	if strings.HasSuffix(result, "سه") {
+		resultRunes := []rune(result)
+		return string(resultRunes[:len(resultRunes)-1]) + "وم"
+	}
+	return result + "م"
+}
+
 func ConvertOrdinalString(str string) (string, error) {
 	if str == "1" {
 		return fa_first, nil
@@ -289,14 +300,7 @@ func ConvertOrdinalString(str string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if strings.HasSuffix(result, "ی") {
-		result += "\u200cام"
-	} else if strings.HasSuffix(result, "سه") {
-		result = result[:len(result)-1] + "وم"
-	} else {
-		result += "م"
-	}
-	return result, nil
+	return addOrdinalSuffix(result), nil
 }
 
 func ConvertOrdinalBigInt(bn *big.Int) string {
@@ -307,12 +311,5 @@ func ConvertOrdinalBigInt(bn *big.Int) string {
 		return fa_tenth
 	}
 	result := ConvertBigInt(bn)
-	if strings.HasSuffix(result, "ی") {
-		result += "\u200cام"
-	} else if strings.HasSuffix(result, "سه") {
-		result = result[:len(result)-1] + "وم"
-	} else {
-		result += "م"
-	}
-	return result
+	return addOrdinalSuffix(result)
 }
