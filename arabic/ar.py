@@ -39,94 +39,6 @@ class SmallWord(typing.NamedTuple):
 		return getattr(self, mf)
 
 
-# words = list[
-# 	{
-# 		male=list[
-# 			{
-# 				"0": "",
-# 				"1": "واحد",
-# 				"2": "اثنان",
-# 				"3": "ثلاثة",
-# 				"4": "أربعة",
-# 				"5": "خمسة",
-# 				"6": "ستة",
-# 				"7": "سبعة",
-# 				"8": "ثمانية",
-# 				"9": "تسعة",
-# 				"10": "عشرة",
-# 				"11": "أحد عشر",
-# 				"12": "اثنا عشر",
-# 				"13": "ثلاثة عشر",
-# 				"14": "أربعة عشر",
-# 				"15": "خمسة عشر",
-# 				"16": "ستة عشر",
-# 				"17": "سبعة عشر",
-# 				"18": "ثمانية عشر",
-# 				"19": "تسعة عشر",
-# 				"20": "عشرون",
-# 				"30": "ثلاثون",
-# 				"40": "أربعون",
-# 				"50": "خمسون",
-# 				"60": "ستون",
-# 				"70": "سبعون",
-# 				"80": "ثمانون",
-# 				"90": "تسعون",
-# 				"100": "مئة",
-# 				"200": "مئتان",
-# 				"300": "ثلاثمئة",
-# 				"400": "أربعمئة",
-# 				"500": "خمسمئة",
-# 				"600": "ستمئة",
-# 				"700": "سبعمئة",
-# 				"800": "ثمانمئة",
-# 				"900": "تسعمئة",
-# 			}
-# 		],
-# 		female=list[
-# 			{
-# 				"0": "",
-# 				"1": "واحدة",
-# 				"2": "اثنتان",
-# 				"3": "ثلاث",
-# 				"4": "أربع",
-# 				"5": "خمس",
-# 				"6": "ست",
-# 				"7": "سبع",
-# 				"8": "ثمان",
-# 				"9": "تسع",
-# 				"10": "عشر",
-# 				"11": "إحدى عشرة",
-# 				"12": "ثنتا عشرة",
-# 				"13": "ثلاث عشرة",
-# 				"14": "أربع عشرة",
-# 				"15": "خمس عشرة",
-# 				"16": "ست عشرة",
-# 				"17": "سبع عشرة",
-# 				"18": "ثمان عشرة",
-# 				"19": "تسع عشرة",
-# 				"20": "عشرون",
-# 				"30": "ثلاثون",
-# 				"40": "أربعون",
-# 				"50": "خمسون",
-# 				"60": "ستون",
-# 				"70": "سبعون",
-# 				"80": "ثمانون",
-# 				"90": "تسعون",
-# 				"100": "مئة",
-# 				"200": "مئتان",
-# 				"300": "ثلاثمئة",
-# 				"400": "أربعمئة",
-# 				"500": "خمسمئة",
-# 				"600": "ستمئة",
-# 				"700": "سبعمئة",
-# 				"800": "ثمانمئة",
-# 				"900": "تسعمئة",
-# 			}
-# 		],
-# 	}
-# ]
-
-
 small_words = {
 	0: SmallWord(
 		male="",
@@ -433,8 +345,6 @@ def processGroup(group: Group, feminine: bool) -> str:
 def convertGroup(group: Group, feminine: bool, appending: bool) -> str:
 	# convert group into its text
 	groupDescription = processGroup(group, feminine)
-	if groupDescription == "":
-		return ""
 	if group.level == 0:
 		return groupDescription
 
@@ -457,9 +367,9 @@ def convert_int(num: int) -> str:
 	groups = extractGroupsByBigInt(num, bigIntCountDigits(num))
 	result: list[str] = []
 	for group in groups:
-		groupResult = convertGroup(group, False, len(result) > 0)
-		if groupResult == "":
+		if group.number == 0:
 			continue
+		groupResult = convertGroup(group, False, len(result) > 0)
 		result.insert(0, groupResult)
 	return ar_and.join(result)
 
@@ -470,9 +380,9 @@ def convert_string(st: str) -> str:
 	groups = extractGroupsByString(st)
 	result: list[str] = []
 	for group in groups:
-		groupResult = convertGroup(group, False, len(result) > 0)
-		if groupResult == "":
+		if group.number == 0:
 			continue
+		groupResult = convertGroup(group, False, len(result) > 0)
 		result.insert(0, groupResult)
 	return ar_and.join(result)
 
