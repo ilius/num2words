@@ -23,12 +23,11 @@
 # SOFTWARE.
 
 
-# Based on https://github.com/ahmadRagheb/number2word-Arabic
-
-import locale
 import sys
 import typing
+from dataclasses import dataclass
 
+ar_and = " و "
 ar_zero = "صفر"
 
 
@@ -38,6 +37,7 @@ class SmallWord(typing.NamedTuple):
 
 	def get(self, mf: str) -> str:
 		return getattr(self, mf)
+
 
 # words = list[
 # 	{
@@ -127,384 +127,350 @@ class SmallWord(typing.NamedTuple):
 # ]
 
 
-words = {
-	"0": SmallWord(
+small_words = {
+	0: SmallWord(
 		male="",
 		female="",
 	),
-	"1": SmallWord(
+	1: SmallWord(
 		female="واحدة",
 		male="واحد",
 	),
-	"2": SmallWord(
+	2: SmallWord(
 		female="اثنتان",
 		male="اثنان",
 	),
-	"3": SmallWord(
+	3: SmallWord(
 		female="ثلاث",
 		male="ثلاثة",
 	),
-	"4": SmallWord(
+	4: SmallWord(
 		female="أربع",
 		male="أربعة",
 	),
-	"5": SmallWord(
+	5: SmallWord(
 		female="خمس",
 		male="خمسة",
 	),
-	"6": SmallWord(
+	6: SmallWord(
 		female="ست",
 		male="ستة",
 	),
-	"7": SmallWord(
+	7: SmallWord(
 		female="سبع",
 		male="سبعة",
 	),
-	"8": SmallWord(
+	8: SmallWord(
 		female="ثمان",
 		male="ثمانية",
 	),
-	"9": SmallWord(
+	9: SmallWord(
 		female="تسع",
 		male="تسعة",
 	),
-	"10": SmallWord(
+	10: SmallWord(
 		female="عشر",
 		male="عشرة",
 	),
-	"11": SmallWord(
+	11: SmallWord(
 		female="إحدى عشرة",
 		male="أحد عشر",
 	),
-	"12": SmallWord(
+	12: SmallWord(
 		female="ثنتا عشرة",
 		male="اثنا عشر",
 	),
-	"13": SmallWord(
+	13: SmallWord(
 		female="ثلاث عشرة",
 		male="ثلاثة عشر",
 	),
-	"14": SmallWord(
+	14: SmallWord(
 		female="أربع عشرة",
 		male="أربعة عشر",
 	),
-	"15": SmallWord(
+	15: SmallWord(
 		female="خمس عشرة",
 		male="خمسة عشر",
 	),
-	"16": SmallWord(
+	16: SmallWord(
 		female="ست عشرة",
 		male="ستة عشر",
 	),
-	"17": SmallWord(
+	17: SmallWord(
 		female="سبع عشرة",
 		male="سبعة عشر",
 	),
-	"18": SmallWord(
+	18: SmallWord(
 		female="ثمان عشرة",
 		male="ثمانية عشر",
 	),
-	"19": SmallWord(
+	19: SmallWord(
 		female="تسع عشرة",
 		male="تسعة عشر",
 	),
-	"20": SmallWord(
+	20: SmallWord(
 		female="عشرون",
 		male="عشرون",
 	),
-	"30": SmallWord(
+	30: SmallWord(
 		female="ثلاثون",
 		male="ثلاثون",
 	),
-	"40": SmallWord(
+	40: SmallWord(
 		female="أربعون",
 		male="أربعون",
 	),
-	"50": SmallWord(
+	50: SmallWord(
 		female="خمسون",
 		male="خمسون",
 	),
-	"60": SmallWord(
+	60: SmallWord(
 		female="ستون",
 		male="ستون",
 	),
-	"70": SmallWord(
+	70: SmallWord(
 		female="سبعون",
 		male="سبعون",
 	),
-	"80": SmallWord(
+	80: SmallWord(
 		female="ثمانون",
 		male="ثمانون",
 	),
-	"90": SmallWord(
+	90: SmallWord(
 		female="تسعون",
 		male="تسعون",
 	),
-	"100": SmallWord(
+	100: SmallWord(
 		female="مائة",
 		male="مائة",
 	),
-	"200": SmallWord(
+	200: SmallWord(
 		female="مئتان",
 		male="مئتان",
 	),
-	"300": SmallWord(
+	300: SmallWord(
 		female="ثلاثمائة",
 		male="ثلاثمائة",
 	),
-	"400": SmallWord(
+	400: SmallWord(
 		female="أربعمائة",
 		male="أربعمائة",
 	),
-	"500": SmallWord(
+	500: SmallWord(
 		female="خمسمائة",
 		male="خمسمائة",
 	),
-	"600": SmallWord(
+	600: SmallWord(
 		female="ستمائة",
 		male="ستمائة",
 	),
-	"700": SmallWord(
+	700: SmallWord(
 		female="سبعمائة",
 		male="سبعمائة",
 	),
-	"800": SmallWord(
+	800: SmallWord(
 		female="ثمانمائة",
 		male="ثمانمائة",
 	),
-	"900": SmallWord(
+	900: SmallWord(
 		female="تسعمائة",
 		male="تسعمائة",
 	),
 }
 
 
-class number2word:
-	def __init__(self, number):
-		self.number = number
+class GroupWord(typing.NamedTuple):
+	normal: str
+	genitive: str
+	appended: str
+	plural: str
 
-	def to_string(self):
-		returnmsg = ""
-		# // convert number into array of(string) number each case
-		# // -------number: 121210002876 - ---------- //
-		# //   0          1          2          3 //
-		# // '121'      '210'      '002'      '876'
-
-		# to format number like 10012 became 100,12
-		my_number = self.number
-		english_format_number = self.convert_number(my_number)
-		# we split it into array
-		array_number = english_format_number.split(",")
-		# array_number is type of list
-		# frappe.throw(array_number)
-		# convert each number(hundred) to arabic
-		for i in range(len(array_number)):
-			place = len(array_number) - i
-			returnmsg = returnmsg + self.convert(array_number[i], place)
-			# if array_number[i+1] and array_number[i+1] > 0:
-			if 0 <= i < len(array_number) - 1:
-				returnmsg = returnmsg + " و "
-		return returnmsg.strip()
-
-	@staticmethod
-	def convert_number(number):
-		locale.setlocale(locale.LC_ALL, "")
-		x = number
-		x = int(float(x))
-		x1 = locale.format_string("%d", x, grouping=True)
-		# frappe.throw(type(x).__name__)
-		if x < 0 or x > 999999999999:
-			raise ValueError("Value out of range")
-		return x1
-
-	@staticmethod
-	def convert(number: str | int, place: int):
-		number = str(number)
-		if number in ("", "0"):
-			return ""
-
-		# take in charge the sex of NUMBERED
-		#  sex = self.sex
-		returnmsg = ""
-
-		# sex = "male"
-		# the number word in arabic for masculine and feminine
-
-		# take in charge the different way of writing the thousands and millions ...
-		# mil = list[
-		#     '2' : list['1' : 'ألف', '2' : 'ألفان', '3' : 'آلاف'],
-		#     '3' : list['1' : 'مليون', '2' : 'مليونان', '3' : 'ملايين'],
-		#     '4' : list['1' : 'مليار', '2' : 'ملياران', '3' : 'مليارات'] ]
-
-		mf = {
-			1: "male",
-			2: "male",
-			3: "male",
-			4: "male",
-		}
-		number_length = len(number)
-
-		# we are dealing with 3 digits number in each loop the main method calls convert
-		# method and pass a string with tree digit in it ...
-		# for example 123 or 19 or 3 ..
-
-		# we will clean left zero for example 001 will be 1 ,,
-		# 012 will be 12
-
-		if number[0] == 0:
-			if number[1] == 0:
-				return int(number[:-1])
-			return int(number[:-2])
-
-		# switching number length
-		# if number have on digits like "1"
-		returnmsg = ""
-		if number_length == 1:
-			# number=number+'one'
-			if place == 1:
-				returnmsg = returnmsg + words[number].get(mf[place])
-			if place == 2:
-				if int(number) == 1:
-					returnmsg = " ألف"
-				elif int(number) == 2:
-					returnmsg = " ألفان"
-				else:
-					returnmsg = returnmsg + words[number].get(mf[place]) + " آلاف"
-			if place == 3:
-				if int(number) == 1:
-					returnmsg = returnmsg + " مليون"
-				elif int(number) == 2:
-					returnmsg = returnmsg + " مليونان"
-				else:
-					returnmsg = returnmsg + words[number].get(mf[place]) + " ملايين"
-			if place == 4:
-				if int(number) == 1:
-					returnmsg = returnmsg + " مليار"
-				elif int(number) == 2:
-					returnmsg = returnmsg + " ملياران"
-				else:
-					returnmsg = returnmsg + words[number].get(mf[place]) + " مليارات"
-
-		elif number_length == 2:
-			# number=number+'two'
-
-			# if words[number].get(mf[place]):
-			if number in words:
-				returnmsg = returnmsg + words[number].get(mf[place])
-			else:
-				twoy = int(number[0]) * 10
-				ony = number[1]
-				returnmsg = (
-					returnmsg
-					+ words[ony].get(mf[place])
-					+ " و "
-					+ words[str(twoy)].get(mf[place])
-				)
-
-			if place == 2:
-				returnmsg = returnmsg + " ألف"
-			if place == 3:
-				returnmsg = returnmsg + " مليون"
-			if place == 4:
-				returnmsg = returnmsg + " مليار"
-
-		elif number_length == 3:
-			# number=number+'three'
-			# if words[number].get(mf[place]):
-			if number in words:
-				returnmsg = returnmsg + words[str(number)].get(mf[place])
-
-				if number == "200":
-					returnmsg = " مئتا"
-
-				if place == 2:
-					returnmsg = returnmsg + " ألف"
-				if place == 3:
-					returnmsg = returnmsg + " مليون"
-				if place == 4:
-					returnmsg = returnmsg + " مليار"
-
-				return returnmsg
-
-			threey = int(number[0]) * 100
-			threey = str(threey)
-			if words[threey].get(mf[place]):
-				returnmsg = returnmsg + words[threey].get(mf[place])
-
-			twoyony = (int(number[1]) * 10) + int(number[2])
-			if int(twoyony) == 2:
-				if place == 1:
-					twoyony = words["2"].get(mf[place])
-				if place == 2:
-					twoyony = " ألفان"
-				if place == 3:
-					twoyony = " مليونان"
-				if place == 4:
-					twoyony = " ملياران"
-
-				if int(threey) != 0:
-					twoyony = "و " + str(twoyony)
-
-				returnmsg = returnmsg + " " + twoyony
-
-			elif int(twoyony) == 1:
-				twoyony = str(twoyony)
-				if place == 1:
-					twoyony = words["1"].get(mf[place])
-				if place == 2:
-					twoyony = "ألف"
-				if place == 3:
-					twoyony = "مليون"
-				if place == 4:
-					twoyony = "مليار"
-
-				if int(threey) != 0:
-					twoyony = "و " + str(twoyony)
-
-				returnmsg = returnmsg + " " + twoyony
-
-			else:
-				# if words[twoyony].get(mf[place]):
-				twoyony = str(twoyony)
-				if twoyony in words:
-					# if words.has_key(twoyony):
-					twoyony = words[twoyony].get(mf[place])
-				else:
-					twoy = int(number[1]) * 10
-					twoy = str(twoy)
-					ony = number[2]
-					twoyony = (
-						words[ony].get(mf[place]) + " و " + words[twoy].get(mf[place])
-					)
-				if twoyony and int(threey) != 0:
-					returnmsg = returnmsg + " و " + twoyony
-				else:
-					returnmsg = returnmsg + " " + twoyony
-
-				if place == 2:
-					returnmsg = returnmsg + " ألف"
-				if place == 3:
-					returnmsg = returnmsg + " مليون"
-				if place == 4:
-					returnmsg = returnmsg + " مليار"
-
-		return returnmsg
+	def get(self, mf: str) -> str:
+		return getattr(self, mf)
 
 
-def convert_string(st: str) -> str:
-	if st == "0":
-		return ar_zero
-	return number2word(int(st)).to_string()
+group_words: list[GroupWord] = [
+	GroupWord(  # 10^2 Hundred
+		normal="مائة",
+		genitive="مئتا",
+		appended="",
+		plural="",
+	),
+	GroupWord(  # 10^3 Thousand
+		normal="ألف",
+		genitive="ألفا",
+		appended="ألفاً",
+		plural="آلاف",
+	),
+	GroupWord(  # 10^6 Million
+		normal="مليون",
+		genitive="مليونا",
+		appended="مليوناً",
+		plural="ملايين",
+	),
+	GroupWord(  # 10^9 Billion
+		normal="مليار",
+		genitive="مليارا",
+		appended="ملياراً",
+		plural="مليارات",
+	),
+	GroupWord(  # 10^12 Trillion
+		normal="تريليون",
+		genitive="تريليونا",
+		appended="تريليوناً",
+		plural="تريليونات",
+	),
+	GroupWord(  # 10^15 Quadrillion
+		normal="كوادريليون",
+		genitive="كوادريليونا",
+		appended="كوادريليوناً",
+		plural="كوادريليونات",
+	),
+	GroupWord(  # 10^18 Quintillion
+		normal="كوينتليون",
+		genitive="كوينتليونا",
+		appended="كوينتليوناً",
+		plural="كوينتليونات",
+	),
+	GroupWord(  # 10^21 Sextillion
+		normal="سكستيليون",
+		genitive="سكستيليونا",
+		appended="سكستيليوناً",
+		plural="سكستيليونات",
+	),
+]
+
+
+@dataclass
+class Group:
+	level: int
+	number: int
+
+
+def extractGroupsByString(st) -> list[Group]:
+	n = len(st)
+	d, m = divmod(n, 3)
+	numbers = [int(st[n - 3 * i - 3 : n - 3 * i]) for i in range(d)]
+	if m > 0:
+		numbers.append(int(st[:m]))
+	return [Group(level=level, number=number) for level, number in enumerate(numbers)]
+
+
+def bigIntCountDigits(bn: int) -> int:
+	if bn == 0:
+		return 1
+	count = 0
+	while bn != 0:
+		bn = bn // 10
+		count += 1
+	return count
+
+
+def extractGroupsByBigInt(bn: int, digitCount: int) -> list[Group]:
+	groupCount = digitCount // 3
+	numbers = [0] * groupCount
+	for i in range(groupCount):
+		div, mod = divmod(bn, 1000)
+		numbers[i] = mod
+		bn = div
+	m = digitCount % 3
+	if m > 0:
+		numbers.append(bn)
+	return [Group(level=level, number=number) for level, number in enumerate(numbers)]
+
+
+def getDigitWord(digit: int, groupLevel: int, feminine: bool) -> str:
+	if feminine and groupLevel == 0:
+		return small_words[digit].female
+	return small_words[digit].male
+
+
+def processTens(tens: int, hundreds: int, groupLevel: int, feminine: bool) -> str:
+	if tens < 20:
+		# if we are processing under 20 numbers
+		if tens == 2 and hundreds == 0 and groupLevel > 0:
+			# This is special case for number 2 when it comes alone in the group
+			# In the case of individuals
+			return group_words[groupLevel].genitive + "ن"
+		# General case
+		if tens == 1 and groupLevel > 0:
+			return group_words[groupLevel].normal
+		# Get Feminine status for this digit
+		return getDigitWord(tens, groupLevel, feminine)
+
+	ones = tens % 10
+	if ones == 0:
+		return small_words[tens].male
+
+	return (
+		getDigitWord(ones, groupLevel, feminine)
+		+ ar_and
+		+ small_words[int(tens / 10) * 10].male
+	)
+
+
+def processGroup(group: Group, feminine: bool) -> str:
+	tens = group.number % 100
+	hundreds = int(group.number / 100) * 100
+	if hundreds == 0:
+		return processTens(tens, hundreds, group.level, feminine)
+
+	if tens == 0:
+		if hundreds == 200 and group.level > 0:
+			# genitive case - حالة المضاف
+			return group_words[0].genitive
+		return small_words[hundreds].male
+
+	# normal case - الحالة العادية
+	return (
+		small_words[hundreds].male
+		+ ar_and
+		+ processTens(tens, hundreds, group.level, feminine)
+	)
+
+
+# groupNumber < 1000
+def convertGroup(group: Group, feminine: bool, appending: bool) -> str:
+	# convert group into its text
+	groupDescription = processGroup(group, feminine)
+	if groupDescription == "":
+		return ""
+	if group.level == 0:
+		return groupDescription
+
+	if group.number != 2 and group.number % 100 != 1:
+		if group.number >= 3 and group.number <= 10:
+			# for numbers between 3 and 9 we use plural name
+			return groupDescription + " " + group_words[group.level].plural
+		if appending:
+			# use appending case
+			return groupDescription + " " + group_words[group.level].appended
+		# use normal case
+		return groupDescription + " " + group_words[group.level].normal
+
+	return groupDescription
 
 
 def convert_int(num: int) -> str:
 	if num == 0:
 		return ar_zero
-	return number2word(num).to_string()
+	groups = extractGroupsByBigInt(num, bigIntCountDigits(num))
+	result: list[str] = []
+	for group in groups:
+		groupResult = convertGroup(group, False, len(result) > 0)
+		if groupResult == "":
+			continue
+		result = [groupResult] + result
+	return ar_and.join(result)
+
+
+def convert_string(st: str) -> str:
+	if st == "0":
+		return ar_zero
+	return convert_int(int(st))  # FIXME
 
 
 if __name__ == "__main__":
 	for arg in sys.argv[1:]:
 		number = int(arg)
-		num = number2word(number)
-		print(num.to_string())
+		print(convert_int(number))
