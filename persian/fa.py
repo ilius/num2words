@@ -187,20 +187,29 @@ def convert_int(bn: int) -> str:
 	return convertLarge(extractGroupsByBigInt(bn, digitCount))
 
 
-def convert_ordinal(arg):
-	if isinstance(arg, int):
-		num = arg
-		st = str(arg)
-	elif isinstance(arg, str):
-		num = int(arg)
-		st = arg
+def convert_str_ordinal(st: str):
+	if st == "1":
+		return "اول"  # or "یکم"
+	if st == "10":
+		return "دهم"
+	norm_fa = convert_str(st)
+	if not norm_fa:
+		return ""
+	if norm_fa.endswith("ی"):
+		norm_fa += "‌ام"
+	elif norm_fa.endswith("سه"):
+		norm_fa = norm_fa[:-1] + "وم"
 	else:
-		raise TypeError("bad type {type(arg)!r}")
+		norm_fa += "م"
+	return norm_fa
+
+
+def convert_int_ordinal(num):
 	if num == 1:
 		return "اول"  # or "یکم"
 	if num == 10:
 		return "دهم"
-	norm_fa = convert_str(st)
+	norm_fa = convert_int(num)
 	if not norm_fa:
 		return ""
 	if norm_fa.endswith("ی"):
@@ -220,4 +229,4 @@ if __name__ == "__main__":
 		except ValueError:  # noqa: PERF203
 			print(f"{arg}: non-numeric argument")
 		else:
-			print(f"{k:,}\n{convert_str(k)}\n{convert_ordinal(k)}\n")
+			print(f"{k:,}\n{convert_int(k)}\n{convert_int_ordinal(k)}\n")
