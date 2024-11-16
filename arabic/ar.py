@@ -491,10 +491,16 @@ class number2word:
 		return returnmsg
 
 
-def convert(st: str) -> str:
+def convert_string(st: str) -> str:
 	if st == "0":
 		return ar_zero
 	return number2word(int(st)).to_string()
+
+
+def convert_int(num: int) -> str:
+	if num == 0:
+		return ar_zero
+	return number2word(num).to_string()
 
 
 if __name__ == "__main__":
