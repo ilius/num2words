@@ -460,7 +460,7 @@ def convert_int(num: int) -> str:
 		groupResult = convertGroup(group, False, len(result) > 0)
 		if groupResult == "":
 			continue
-		result = [groupResult] + result
+		result.insert(0, groupResult)
 	return ar_and.join(result)
 
 
@@ -473,7 +473,7 @@ def convert_string(st: str) -> str:
 		groupResult = convertGroup(group, False, len(result) > 0)
 		if groupResult == "":
 			continue
-		result = [groupResult] + result
+		result.insert(0, groupResult)
 	return ar_and.join(result)
 
 
