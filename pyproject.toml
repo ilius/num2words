@@ -3,113 +3,113 @@ line-length = 88
 target-version = "py311"
 
 lint.select = [
-    "F", # Pyflakes
-    "E", # pycodestyle Error
-    "W", # pycodestyle Warning
-    # "C90", # mccabe: C901: {name} is too complex ({complexity})
-    "I", # isort: unsorted-imports, missing-required-import
-    # "N", # pep8-naming
-    "D", # pydocstyle
-    "B", # flake8-bugbear
-    "UP", # pyupgrade
-    "YTT", # flake8-2020
-    # "ANN", # flake8-annotationsq, still gives errors for `self`
-    # ASYNC, # flake8-async
-    "ASYNC1",
-    # "S", # flake8-bandit
-    "BLE", # flake8-blind-except
-    # "FBT", # flake8-boolean-trap
-    # "B", flake8-bugbear
-    # "A", # flake8-builtins
-    "COM", # flake8-commas
-    # "CPY", # flake8-copyright   --preview
-    "C4", # flake8-comprehensions
-    "DTZ", # flake8-datetimez
-    "T10", # flake8-debugger
-    "DJ",    # flake8-django
-    # "EM",    # flake8-errmsg, WTF?
-    "EXE",   # flake8-executable
-    "FA",    # flake8-future-annotations
-    "ISC",   # flake8-implicit-str-concat
-    "ICN",   # flake8-import-conventions
-    "G",     # flake8-logging-format
-    "INP",   # flake8-no-pep420
-    "PIE",   # flake8-pie
-    "PYI",   # flake8-pyi
-    "PT",    # flake8-pytest-style
-    "Q",     # flake8-quotes
-    "RSE",   # flake8-raise
-    "RET",   # flake8-return
-    "SLF",   # flake8-self
-    "SLOT",  # flake8-slots
-    "SIM",   # flake8-simplify
-    "TID",   # flake8-tidy-imports
-    "TCH",   # flake8-type-checking
-    "INT",   # flake8-gettext
-    "ARG",   # flake8-unused-arguments
-    # "PTH",   # flake8-use-pathlib
-    # "TD",    # flake8-todos
-    # "FIX",   # flake8-fixme: just shows me FIXMEs and TODOs
-    # "ERA",   # eradicate
-    "PD",    # pandas-vet
-    "PGH",   # pygrep-hooks
-    # "PL",    # Pylint
-    # "TRY",   # tryceratops, they all sound BS
-    # "FLY",   # flynt
-    "NPY",   # NumPy-specific rules
-    "AIR",   # Airflow
-    "PERF",  # Perflint
-    # "FURB",  # refurb   --preview
-    "LOG",   # flake8-logging
-    "RUF",   # Ruff-specific rules
+	"F", # Pyflakes
+	"E", # pycodestyle Error
+	"W", # pycodestyle Warning
+	# "C90", # mccabe: C901: {name} is too complex ({complexity})
+	"I", # isort: unsorted-imports, missing-required-import
+	# "N", # pep8-naming
+	"D",   # pydocstyle
+	"B",   # flake8-bugbear
+	"UP",  # pyupgrade
+	"YTT", # flake8-2020
+	# "ANN", # flake8-annotationsq, still gives errors for `self`
+	# ASYNC, # flake8-async
+	"ASYNC1",
+	# "S", # flake8-bandit
+	"BLE", # flake8-blind-except
+	# "FBT", # flake8-boolean-trap
+	# "B", flake8-bugbear
+	# "A", # flake8-builtins
+	"COM", # flake8-commas
+	# "CPY", # flake8-copyright   --preview
+	"C4",  # flake8-comprehensions
+	"DTZ", # flake8-datetimez
+	"T10", # flake8-debugger
+	"DJ",  # flake8-django
+	# "EM",    # flake8-errmsg, WTF?
+	"EXE",  # flake8-executable
+	"FA",   # flake8-future-annotations
+	"ISC",  # flake8-implicit-str-concat
+	"ICN",  # flake8-import-conventions
+	"G",    # flake8-logging-format
+	"INP",  # flake8-no-pep420
+	"PIE",  # flake8-pie
+	"PYI",  # flake8-pyi
+	"PT",   # flake8-pytest-style
+	"Q",    # flake8-quotes
+	"RSE",  # flake8-raise
+	"RET",  # flake8-return
+	"SLF",  # flake8-self
+	"SLOT", # flake8-slots
+	"SIM",  # flake8-simplify
+	"TID",  # flake8-tidy-imports
+	"TCH",  # flake8-type-checking
+	"INT",  # flake8-gettext
+	"ARG",  # flake8-unused-arguments
+	# "PTH",   # flake8-use-pathlib
+	# "TD",    # flake8-todos
+	# "FIX",   # flake8-fixme: just shows me FIXMEs and TODOs
+	# "ERA",   # eradicate
+	"PD",  # pandas-vet
+	"PGH", # pygrep-hooks
+	# "PL",    # Pylint
+	# "TRY",   # tryceratops, they all sound BS
+	# "FLY",   # flynt
+	"NPY",  # NumPy-specific rules
+	"AIR",  # Airflow
+	"PERF", # Perflint
+	# "FURB",  # refurb   --preview
+	"LOG", # flake8-logging
+	"RUF", # Ruff-specific rules
 ]
 lint.ignore = [
-    "SLF", # Private member accessed
-    "PYI034", # py3.11: `__iadd__` methods in classes like `SqEntryList` usually return `self` at runtime
-    "DTZ001", # The use of `datetime.datetime()` without `tzinfo` argument is not allowed
-    "DTZ005", # The use of `datetime.datetime.now()` without `tz` argument is not allowed
+	"SLF",    # Private member accessed
+	"PYI034", # py3.11: `__iadd__` methods in classes like `SqEntryList` usually return `self` at runtime
+	"DTZ001", # The use of `datetime.datetime()` without `tzinfo` argument is not allowed
+	"DTZ005", # The use of `datetime.datetime.now()` without `tz` argument is not allowed
 	"PGH003", # Use specific rule codes when ignoring type issues
 
-    "PT027", # Use `pytest.raises` instead of unittest-style `assertRaises`, why?
-    "PD011", # Use `.to_numpy()` instead of `.values`, WTF?
-    "ICN001", # `tkinter` should be imported as `tk`, WTF?
-    "RUF005", # Consider `[*_list, x]` instead of concatenation
-    "PT009", # Use a regular `assert` instead of unittest-style `assertEqual`, why?
-    "PLR0911", # Too many return statements (x > 6)
-    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
-    "BLE001", # Do not catch blind exception: `Exception`
-    "G004", # Logging statement uses f-string, WTF?
-    "TRY400", # Use `logging.exception` instead of `logging.error`
-    "TRY003", # Avoid specifying long messages outside the exception class, ???
-    "RUF100", # Unused `noqa` directive (non-enabled: ...)
-    "FURB101", # `open` and `read` should be replaced by `Path(rootConfJsonFile).read_text()`
-    "B019", # Use of `functools.lru_cache` or `functools.cache` on methods can lead to memory leaks
-    "D100", # Missing docstring in public module
-    "D101", # Missing docstring in public class
-    "D102", # Missing docstring in public method
-    "D103", # Missing docstring in public function
-    "D104", # Missing docstring in public package
-    "D105", # Missing docstring in magic method
-    "D107", # Missing docstring in `__init__`
-    "D205", # 1 blank line required between summary line and description
-    "D206", # Docstring should be indented with spaces, not tabs
-    "D211", # (Do not enable) no-blank-line-before-class
-    "D212", # multi-line-summary-first-line, conflicts with D213:multi-line-summary-second-line
-    "D401", # First line of docstring should be in imperative mood
-    "D417", # Missing argument descriptions in the docstring
-    "E402", # Module level import not at top of file
-    "E721", # Do not compare types, use `isinstance()`
-    "SIM105", # Use contextlib.suppress({exception}) instead of try-except-pass
-    "SIM117", # Use a single with statement with multiple contexts...
-    "UP009", # UTF-8 encoding declaration is unnecessary
-    "UP037", # Remove quotes from type annotation
-    "W191", # Indentation contains tabs
-    "SIM110", # Use any(...)
-    "SIM115", # Use context handler for opening files
-    # "SIM111", # Use all(...): warning: `SIM111` has been remapped to `SIM110`.
-    # ERA, PD,
-    "TCH003", # Move standard library import `...` into a type-checking block
-    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed in ...
+	"PT027",   # Use `pytest.raises` instead of unittest-style `assertRaises`, why?
+	"PD011",   # Use `.to_numpy()` instead of `.values`, WTF?
+	"ICN001",  # `tkinter` should be imported as `tk`, WTF?
+	"RUF005",  # Consider `[*_list, x]` instead of concatenation
+	"PT009",   # Use a regular `assert` instead of unittest-style `assertEqual`, why?
+	"PLR0911", # Too many return statements (x > 6)
+	"RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
+	"BLE001",  # Do not catch blind exception: `Exception`
+	"G004",    # Logging statement uses f-string, WTF?
+	"TRY400",  # Use `logging.exception` instead of `logging.error`
+	"TRY003",  # Avoid specifying long messages outside the exception class, ???
+	"RUF100",  # Unused `noqa` directive (non-enabled: ...)
+	"FURB101", # `open` and `read` should be replaced by `Path(rootConfJsonFile).read_text()`
+	"B019",    # Use of `functools.lru_cache` or `functools.cache` on methods can lead to memory leaks
+	"D100",    # Missing docstring in public module
+	"D101",    # Missing docstring in public class
+	"D102",    # Missing docstring in public method
+	"D103",    # Missing docstring in public function
+	"D104",    # Missing docstring in public package
+	"D105",    # Missing docstring in magic method
+	"D107",    # Missing docstring in `__init__`
+	"D205",    # 1 blank line required between summary line and description
+	"D206",    # Docstring should be indented with spaces, not tabs
+	"D211",    # (Do not enable) no-blank-line-before-class
+	"D212",    # multi-line-summary-first-line, conflicts with D213:multi-line-summary-second-line
+	"D401",    # First line of docstring should be in imperative mood
+	"D417",    # Missing argument descriptions in the docstring
+	"E402",    # Module level import not at top of file
+	"E721",    # Do not compare types, use `isinstance()`
+	"SIM105",  # Use contextlib.suppress({exception}) instead of try-except-pass
+	"SIM117",  # Use a single with statement with multiple contexts...
+	"UP009",   # UTF-8 encoding declaration is unnecessary
+	"UP037",   # Remove quotes from type annotation
+	"W191",    # Indentation contains tabs
+	"SIM110",  # Use any(...)
+	"SIM115",  # Use context handler for opening files
+	# "SIM111", # Use all(...): warning: `SIM111` has been remapped to `SIM110`.
+	# ERA, PD,
+	"TC003",  # Move standard library import `...` into a type-checking block
+	"ANN401", # Dynamically typed expressions (typing.Any) are disallowed in ...
 ]
 
 # UP033: (Since Python 3.9) Use `@functools.cache`
@@ -121,21 +121,21 @@ lint.unfixable = []
 
 # Exclude a variety of commonly ignored directories.
 exclude = [
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".ruff_cache",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "venv",
+	".direnv",
+	".eggs",
+	".git",
+	".mypy_cache",
+	".nox",
+	".pants.d",
+	".ruff_cache",
+	".tox",
+	".venv",
+	"__pypackages__",
+	"_build",
+	"buck-out",
+	"build",
+	"dist",
+	"venv",
 ]
 
 # Allow unused variables when underscore-prefixed.
@@ -157,20 +157,19 @@ line-ending = "auto"
 max-complexity = 20
 
 [tool.mypy]
-exclude = [
-]
+exclude = []
 
 [tool.refurb]
 ignore = [
-    101, # Replace `with open(x, ...) as f: y = f.read()` with `y = Path(x).read_bytes()`
-    103, # Replace `with open(x, ...) as f: f.write(y)` with `Path(x).write_bytes(y)`
-    104, # Replace `os.getcwd()` with `Path.cwd()`
-    107, # Replace `try: ... except OSError: pass` with `with suppress(OSError): ...`
-    141, # Replace `os.path.exists(x)` with `Path(x).exists()`
-    144, # Replace `os.remove(x)` with `Path(x).unlink()`
-    146, # Replace `os.path.isfile(x)` with `Path(x).is_file()`
-    150, # Replace `os.makedirs(x)` with `Path(x).mkdir(parents=True)`
-    155, # Replace `os.path.getsize(x)` with `Path(x).stat().st_size`
+	101, # Replace `with open(x, ...) as f: y = f.read()` with `y = Path(x).read_bytes()`
+	103, # Replace `with open(x, ...) as f: f.write(y)` with `Path(x).write_bytes(y)`
+	104, # Replace `os.getcwd()` with `Path.cwd()`
+	107, # Replace `try: ... except OSError: pass` with `with suppress(OSError): ...`
+	141, # Replace `os.path.exists(x)` with `Path(x).exists()`
+	144, # Replace `os.remove(x)` with `Path(x).unlink()`
+	146, # Replace `os.path.isfile(x)` with `Path(x).is_file()`
+	150, # Replace `os.makedirs(x)` with `Path(x).mkdir(parents=True)`
+	155, # Replace `os.path.getsize(x)` with `Path(x).stat().st_size`
 ]
 # refurb has no exclude param!
 #exclude = [
@@ -181,69 +180,63 @@ ignore = [
 [tool.pylint.messages_control]
 max-line-length = 88
 disable = [
-    "no-member",
-    "no-name-in-module",
-    "missing-module-docstring",
-    "bad-indentation",
-    "invalid-name",
-    "logging-fstring-interpolation",
-    "too-many-arguments",
-    "broad-exception-caught",
-    "missing-function-docstring",
-    "unused-argument",
-    "import-outside-toplevel",
-    "missing-class-docstring",
-    "too-many-instance-attributes",
-    "fixme",
-    "redefined-builtin",
-    "pointless-statement",
-    "abstract-method",
-    "unidiomatic-typecheck",
-    "attribute-defined-outside-init",
-    "unspecified-encoding",
-    "super-init-not-called",
-    "redefined-slots-in-subclass",
-    "redefined-outer-name",
-    "wrong-import-position",
-    "too-few-public-methods",
-    "too-many-lines",
-    "too-many-public-methods",
-    "too-many-statements",
-    "too-many-locals",
-    "too-many-branches",
-    "too-many-return-statements",
-    "unused-import",
-    "import-error",
-    "protected-access",
-    "consider-using-with",
-    "disallowed-name",
-    "useless-return",
-    "method-cache-max-size-none",
-    "global-statement",
-    "R0801", # Similar lines in 2 files
-    "ungrouped-imports", # C0412: Imports from package pyglossary are not grouped
-    "inconsistent-return-statements", # R1710: Either all return statements in a function should return an expression, or none of them should
-    "too-many-ancestors", # R0901: Too many ancestors
+	"no-member",
+	"no-name-in-module",
+	"missing-module-docstring",
+	"bad-indentation",
+	"invalid-name",
+	"logging-fstring-interpolation",
+	"too-many-arguments",
+	"broad-exception-caught",
+	"missing-function-docstring",
+	"unused-argument",
+	"import-outside-toplevel",
+	"missing-class-docstring",
+	"too-many-instance-attributes",
+	"fixme",
+	"redefined-builtin",
+	"pointless-statement",
+	"abstract-method",
+	"unidiomatic-typecheck",
+	"attribute-defined-outside-init",
+	"unspecified-encoding",
+	"super-init-not-called",
+	"redefined-slots-in-subclass",
+	"redefined-outer-name",
+	"wrong-import-position",
+	"too-few-public-methods",
+	"too-many-lines",
+	"too-many-public-methods",
+	"too-many-statements",
+	"too-many-locals",
+	"too-many-branches",
+	"too-many-return-statements",
+	"unused-import",
+	"import-error",
+	"protected-access",
+	"consider-using-with",
+	"disallowed-name",
+	"useless-return",
+	"method-cache-max-size-none",
+	"global-statement",
+	"R0801",                          # Similar lines in 2 files
+	"ungrouped-imports",              # C0412: Imports from package pyglossary are not grouped
+	"inconsistent-return-statements", # R1710: Either all return statements in a function should return an expression, or none of them should
+	"too-many-ancestors",             # R0901: Too many ancestors
 ]
 
 [tool.pylint.master]
 ignore-paths = [
-    "^pyglossary/reverse.py$",
-    "^pyglossary/ui/progressbar/.*",
-    "^pyglossary/ui/ui_qt.py$",
-    "^pyglossary/ui/wcwidth/",
+	"^pyglossary/reverse.py$",
+	"^pyglossary/ui/progressbar/.*",
+	"^pyglossary/ui/ui_qt.py$",
+	"^pyglossary/ui/wcwidth/",
 ]
 
 [tool.vulture]
-exclude = [
-    "build/",
-    "tests/",
-    "*_test.py",
-    "test.py",
-]
+exclude = ["build/", "tests/", "*_test.py", "test.py"]
 # ignore_decorators = ["@app.route", "@require_*"]
-ignore_names = [
-]
+ignore_names = []
 make_whitelist = true
 min_confidence = 60
 # paths = []
@@ -251,5 +244,7 @@ sort_by_size = false
 verbose = false
 
 [tool.import-analyzer]
-exclude = [
-]
+exclude = []
+
+[tool.fixit]
+disable = ["fixit.rules.no_namedtuple"]
