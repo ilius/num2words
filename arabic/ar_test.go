@@ -3,7 +3,6 @@ package arabic_test
 import (
 	"bufio"
 	"compress/gzip"
-	"log"
 	"math/big"
 	"os"
 	"strings"
@@ -37,7 +36,7 @@ func loadTestData() []TestCase {
 		line := scanner.Text()
 		parts := strings.SplitN(line, "\t", 2)
 		if len(parts) != 2 {
-			log.Fatalf("bad line: %v", line)
+			panic("bad line: " + line)
 		}
 		num_str := parts[0]
 		words := parts[1]
@@ -50,7 +49,7 @@ func loadTestData() []TestCase {
 		})
 	}
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	return data
 }
@@ -72,12 +71,12 @@ func TestConvertString2(t *testing.T) {
 		actual_words := strings.Split(actual_words_str, " ")
 		is.Equal(actual_words, words)
 	}
-	words := strings.Split(strings.ReplaceAll(`تسعة سكستيليونات 
-و ثمانمائة و اثنان و سبعون كوينتليوناً 
-و ستمائة و سبعة و سبعون كوادريليوناً 
-و ثمانمائة و تسعة و عشرون تريليوناً و ستمائة 
-و أربعة و خمسون ملياراً 
-و سبعمائة و أربعة و سبعون مليوناً و خمسمائة 
+	words := strings.Split(strings.ReplaceAll(`تسعة سكستيليونات
+و ثمانمائة و اثنان و سبعون كوينتليوناً
+و ستمائة و سبعة و سبعون كوادريليوناً
+و ثمانمائة و تسعة و عشرون تريليوناً و ستمائة
+و أربعة و خمسون ملياراً
+و سبعمائة و أربعة و سبعون مليوناً و خمسمائة
 و خمسة و ثمانون ألفاً و مئتان و تسعة و ستون`, "\n", ""), " ")
 	test(
 		"9872677829654774585269",

@@ -37,7 +37,7 @@ func loadTestData() []TestCase {
 		line := scanner.Text()
 		parts := strings.SplitN(line, "\t", 2)
 		if len(parts) != 2 {
-			log.Fatalf("bad line: %v", line)
+			panic("bad line: " + line)
 		}
 		num_str := parts[0]
 		words := parts[1]
@@ -50,7 +50,7 @@ func loadTestData() []TestCase {
 		})
 	}
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	return data
 }
