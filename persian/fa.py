@@ -179,7 +179,7 @@ def convert_str(st):
 # convert_int: only for non-negative integers
 def convert_int(bn: int) -> str:
 	if bn < 0:
-		return "Negative " + convert_int(abs(bn))
+		return "منفی " + convert_int(abs(bn))
 	digitCount = bigIntCountDigits(bn)
 	if digitCount <= 3:  # n <= 999
 		return convertSmall(bn)
