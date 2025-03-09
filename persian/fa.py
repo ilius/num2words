@@ -16,6 +16,7 @@
 
 import sys
 
+fa_and   = " و "
 fa_zero = "صفر"
 
 faBaseNum = {
@@ -134,7 +135,7 @@ def convertLarge(groups: list[int]) -> str:
 					faOrder = faBigNum[m] + faOrder
 			wpart = faOrder if i == 1 and p == 1 else convertSmall(p) + " " + faOrder
 		w_groups.append(wpart)
-	return " و ".join(reversed(w_groups))
+	return fa_and.join(reversed(w_groups))
 
 
 # num < 1000
@@ -155,14 +156,14 @@ def convertSmall(n: int) -> str:
 		else:
 			fa += faBaseNum[s] + faBaseNum[100]
 		if d != 0 or y != 0:
-			fa += " و "
+			fa += fa_and
 	if d != 0:
 		if dy in faBaseNumKeys:
 			fa += faBaseNum[dy]
 			return fa
 		fa += faBaseNum[d * 10]
 		if y != 0:
-			fa += " و "
+			fa += fa_and
 	if y != 0:
 		fa += faBaseNum[y]
 	return fa
