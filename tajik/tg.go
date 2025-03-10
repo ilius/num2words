@@ -28,47 +28,44 @@ var (
 const (
 	zwnj     = " "
 	tg_and   = "у "
-	tg_zero  = "Нол"
-	tg_first = "Аввал" // or "Як??"
-	tg_tenth = "Даҳум"
+	tg_zero  = "сифр"
+	tg_first = "якум"
+	tg_tenth = "даҳум"
 )
 
 var small_words = map[uint16]string{
 	0:   tg_zero,
-	1:   "Як",
+	1:   "як",
 	2:   "ду",
-	3:   "Се",
-	4:   "Чаҳор",
-	5:   "Пань",
-	6:   "Шаш",
-	7:   "Ҳафт",
-	8:   "Ҳашт",
-	9:   "Ну",
+	3:   "се",
+	4:   "чор", // or чаҳор
+	5:   "панҷ",
+	6:   "шаш",
+	7:   "ҳафт",
+	8:   "ҳашт",
+	9:   "нӯҳ",
 	10:  "даҳ",
-	11:  "Ёздаҳ",
+	11:  "ёздаҳ",
 	12:  "дувоздаҳ",
-	13:  "Сенздаҳ",
-	14:  "Чаҳорум",
-	15:  "Понздаҳ",
-	16:  "Шонздаҳ",
-	17:  "Ҳабдаҳ",
-	18:  "Ҳаждаҳ",
-	19:  "Нуздаҳ",
-	20:  "Бист",
-	30:  "Сӣ",
-	40:  "Чил",
-	50:  "Панҷоҳ",
-	60:  "Шаст",
-	70:  "Ҳафтод",
-	80:  "Ҳаштод",
-	90:  "Навад",
-	100: "Сад",
-	200: "Дусад",
-	300: "Сесад",
-	500: "Панҷсад",
+	13:  "сездаҳ",
+	14:  "чордаҳ",
+	15:  "понздаҳ",
+	16:  "шонздаҳ",
+	17:  "ҳабдаҳ",
+	18:  "ҳашдаҳ",
+	19:  "нуздаҳ",
+	20:  "бист",
+	30:  "сӣ",
+	40:  "чил",
+	50:  "панҷоҳ", // or панҷох
+	60:  "шаст",
+	70:  "ҳафтод",
+	80:  "ҳаштод",
+	90:  "навад",
+	100: "сад",
 }
 
-var big_words_first = []string{"Як", "Ҳазор", "Миллион"}
+var big_words_first = []string{"як", "ҳазор", "миллион"}
 
 // European
 // var big_words_europe = append(
@@ -93,8 +90,8 @@ var big_words_first = []string{"Як", "Ҳазор", "Миллион"}
 // Common in Iran (the rest are uncommon or mistaken)
 var big_words = append(
 	big_words_first,
-	"Миллиард", // Milliard
-	"Триллион", // Trillion
+	"миллиард", // Milliard
+	"триллион", // Trillion
 )
 
 func extractGroupsByString(numStr string) ([]uint16, error) {
@@ -280,11 +277,14 @@ func ConvertBigIntSigned(bn *big.Int) string {
 
 func addOrdinalSuffix(result string) string {
 	if strings.HasSuffix(result, "ӣ") {
-		return result[:len(result)-1] + "юм"
-	}
-	if strings.HasSuffix(result, "се") || strings.HasSuffix(result, "Се") {
 		resultRunes := []rune(result)
-		return string(resultRunes[:len(resultRunes)-1]) + "вум"
+		return string(resultRunes[:len(resultRunes)-1]) + "юм"
+	}
+	if strings.HasSuffix(result, "як") {
+		return result + "ум"
+	}
+	if strings.HasSuffix(result, "се") {
+		return result + "вум"
 	}
 	return result + "юм"
 }

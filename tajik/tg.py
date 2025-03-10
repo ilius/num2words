@@ -20,41 +20,38 @@ tg_and = "у "
 tg_zero = "сифр"
 
 faBaseNum = {
-	1: "Як",
-	2: "ду",
-	3: "Се",
-	4: "Чаҳор",
-	5: "Пань",
-	6: "Шаш",
-	7: "Ҳафт",
-	8: "Ҳашт",
-	9: "Ну",
-	10: "даҳ",
-	11: "Ёздаҳ",
-	12: "дувоздаҳ",
-	13: "Сенздаҳ",
-	14: "Чаҳорум",
-	15: "Понздаҳ",
-	16: "Шонздаҳ",
-	17: "Ҳабдаҳ",
-	18: "Ҳаждаҳ",
-	19: "Нуздаҳ",
-	20: "Бист",
-	30: "Сӣ",
-	40: "Чил",
-	50: "Панҷоҳ",
-	60: "Шаст",
-	70: "Ҳафтод",
-	80: "Ҳаштод",
-	90: "Навад",
-	100: "Сад",
-	200: "Дусад",
-	300: "Сесад",
-	500: "Панҷсад",
+	1: 'як',
+	2: 'ду',
+	3: 'се',
+	4: 'чор',  # or чаҳор
+	5: 'панҷ',
+	6: 'шаш',
+	7: 'ҳафт',
+	8: 'ҳашт',
+	9: 'нӯҳ',
+	10: 'даҳ',
+	11: 'ёздаҳ',
+	12: 'дувоздаҳ',
+	13: 'сездаҳ',
+	14: 'чордаҳ',
+	15: 'понздаҳ',
+	16: 'шонздаҳ',
+	17: 'ҳабдаҳ',
+	18: 'ҳашдаҳ',
+	19: 'нуздаҳ',
+	20: 'бист',
+	30: 'сӣ',
+	40: 'чил',
+	50: 'панҷоҳ',  # or панҷох
+	60: 'шаст',
+	70: 'ҳафтод',
+	80: 'ҳаштод',
+	90: 'навад',
+	100: 'сад',
 }
 faBaseNumKeys = set(faBaseNum.keys())
 
-faBigNumFirst = ["Як", "Ҳазор", "Миллион"]
+faBigNumFirst = ["як", "ҳазор", "миллион"]
 
 # European
 # faBigNumEU = faBigNumFirst + ["میلیارد", "بیلیون", "بیلیارد", "تریلیون", "تریلیارد"]
@@ -70,8 +67,8 @@ faBigNumFirst = ["Як", "Ҳазор", "Миллион"]
 
 # Common in Iran (the rest are uncommon or mistaken)
 faBigNumIran = faBigNumFirst + [
-	"Миллиард",  # Milliard
-	"Триллион",  # Trillion
+	"миллиард",  # Milliard
+	"триллион",  # Trillion
 ]
 
 
@@ -191,14 +188,16 @@ def convert_int(bn: int) -> str:
 	return convertLarge(extractGroupsByBigInt(bn, digitCount))
 
 
-def _addOrdinalSuffix(norm_tg: str) -> str:
-	if not norm_tg:
+def _addOrdinalSuffix(result: str) -> str:
+	if not result:
 		return ""
-	if norm_tg.endswith("ӣ"):
-		return norm_tg[:-1] + "‌юм"
-	elif norm_tg.endswith("се") or norm_tg.endswith("Се"):
-		return norm_tg + "вум"
-	return norm_tg + "юм"
+	if result.endswith("ӣ"):
+		return result[:-1] + "‌юм"
+	elif result.endswith("як"):
+		return result + "ум"
+	elif result.endswith("се"):
+		return result + "вум"
+	return result + "юм"
 
 
 def convert_str_ordinal(st: str):
@@ -206,8 +205,8 @@ def convert_str_ordinal(st: str):
 		return "якум"
 	if st == "10":
 		return "даҳум"
-	norm_tg = convert_str(st)
-	return _addOrdinalSuffix(norm_tg)
+	result = convert_str(st)
+	return _addOrdinalSuffix(result)
 
 
 def convert_int_ordinal(num):
@@ -215,8 +214,8 @@ def convert_int_ordinal(num):
 		return "якум"
 	if num == 10:
 		return "даҳум"
-	norm_tg = convert_int(num)
-	return _addOrdinalSuffix(norm_tg)
+	result = convert_int(num)
+	return _addOrdinalSuffix(result)
 
 
 if __name__ == "__main__":
