@@ -16,7 +16,7 @@
 
 import sys
 
-fa_and   = " و "
+fa_and = " و "
 fa_zero = "صفر"
 
 faBaseNum = {
@@ -188,12 +188,7 @@ def convert_int(bn: int) -> str:
 	return convertLarge(extractGroupsByBigInt(bn, digitCount))
 
 
-def convert_str_ordinal(st: str):
-	if st == "1":
-		return "اول"  # or "یکم"
-	if st == "10":
-		return "دهم"
-	norm_fa = convert_str(st)
+def _to_ordinal(norm_fa: str) -> str:
 	if not norm_fa:
 		return ""
 	if norm_fa.endswith("ی"):
@@ -203,6 +198,15 @@ def convert_str_ordinal(st: str):
 	else:
 		norm_fa += "م"
 	return norm_fa
+
+
+def convert_str_ordinal(st: str):
+	if st == "1":
+		return "اول"  # or "یکم"
+	if st == "10":
+		return "دهم"
+	norm_fa = convert_str(st)
+	return _to_ordinal(norm_fa)
 
 
 def convert_int_ordinal(num):
@@ -211,15 +215,7 @@ def convert_int_ordinal(num):
 	if num == 10:
 		return "دهم"
 	norm_fa = convert_int(num)
-	if not norm_fa:
-		return ""
-	if norm_fa.endswith("ی"):
-		norm_fa += "‌ام"
-	elif norm_fa.endswith("سه"):
-		norm_fa = norm_fa[:-1] + "وم"
-	else:
-		norm_fa += "م"
-	return norm_fa
+	return _to_ordinal(norm_fa)
 
 
 if __name__ == "__main__":
