@@ -20,16 +20,16 @@ en_zero = "Zero"
 en_hundred = "Hundred"
 
 small_words = {
-	0:  en_zero,
-	1:  "One",
-	2:  "Two",
-	3:  "Three",
-	4:  "Four",
-	5:  "Five",
-	6:  "Six",
-	7:  "Seven",
-	8:  "Eight",
-	9:  "Nine",
+	0: en_zero,
+	1: "One",
+	2: "Two",
+	3: "Three",
+	4: "Four",
+	5: "Five",
+	6: "Six",
+	7: "Seven",
+	8: "Eight",
+	9: "Nine",
 	10: "Ten",
 	11: "Eleven",
 	12: "Twelve",
@@ -62,7 +62,7 @@ def extractGroupsByString(numStr: str) -> list[int]:
 	digitCount = len(numStr)
 	groupCount = digitCount // 3
 	groups = [
-		int(numStr[digitCount - 3 * i - 3:digitCount - 3 * i])
+		int(numStr[digitCount - 3 * i - 3 : digitCount - 3 * i])
 		for i in range(groupCount)
 	]
 	m = digitCount % 3
