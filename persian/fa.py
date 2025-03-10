@@ -188,7 +188,7 @@ def convert_int(bn: int) -> str:
 	return convertLarge(extractGroupsByBigInt(bn, digitCount))
 
 
-def _to_ordinal(norm_fa: str) -> str:
+def _addOrdinalSuffix(norm_fa: str) -> str:
 	if not norm_fa:
 		return ""
 	if norm_fa.endswith("ی"):
@@ -206,7 +206,7 @@ def convert_str_ordinal(st: str):
 	if st == "10":
 		return "دهم"
 	norm_fa = convert_str(st)
-	return _to_ordinal(norm_fa)
+	return _addOrdinalSuffix(norm_fa)
 
 
 def convert_int_ordinal(num):
@@ -215,7 +215,7 @@ def convert_int_ordinal(num):
 	if num == 10:
 		return "دهم"
 	norm_fa = convert_int(num)
-	return _to_ordinal(norm_fa)
+	return _addOrdinalSuffix(norm_fa)
 
 
 if __name__ == "__main__":
