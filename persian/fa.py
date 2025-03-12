@@ -16,6 +16,7 @@
 
 import sys
 
+zwnj = "\u200c"
 fa_and = " و "
 fa_zero = "صفر"
 
@@ -127,11 +128,11 @@ def convertLarge(groups: list[int]) -> str:
 				t9 = faBigNum[3]
 				for j in range(d):
 					if j > 0:
-						faOrder += "‌"
+						faOrder += zwnj
 					faOrder += t9
 				if m != 0:
 					if faOrder != "":
-						faOrder = "‌" + faOrder
+						faOrder = zwnj + faOrder
 					faOrder = faBigNum[m] + faOrder
 			wpart = faOrder if i == 1 and p == 1 else convertSmall(p) + " " + faOrder
 		w_groups.append(wpart)
@@ -192,7 +193,7 @@ def _addOrdinalSuffix(norm_fa: str) -> str:
 	if not norm_fa:
 		return ""
 	if norm_fa.endswith("ی"):
-		norm_fa += "‌ام"
+		norm_fa += zwnj + "ام"
 	elif norm_fa.endswith("سه"):
 		norm_fa = norm_fa[:-1] + "وم"
 	else:
