@@ -20,34 +20,34 @@ tg_and = "у "
 tg_zero = "сифр"
 
 faBaseNum = {
-	1: 'як',
-	2: 'ду',
-	3: 'се',
-	4: 'чор',  # or чаҳор
-	5: 'панҷ',
-	6: 'шаш',
-	7: 'ҳафт',
-	8: 'ҳашт',
-	9: 'нӯҳ',
-	10: 'даҳ',
-	11: 'ёздаҳ',
-	12: 'дувоздаҳ',
-	13: 'сездаҳ',
-	14: 'чордаҳ',
-	15: 'понздаҳ',
-	16: 'шонздаҳ',
-	17: 'ҳабдаҳ',
-	18: 'ҳашдаҳ',
-	19: 'нуздаҳ',
-	20: 'бист',
-	30: 'сӣ',
-	40: 'чил',
-	50: 'панҷоҳ',  # or панҷох
-	60: 'шаст',
-	70: 'ҳафтод',
-	80: 'ҳаштод',
-	90: 'навад',
-	100: 'сад',
+	1: "як",
+	2: "ду",
+	3: "се",
+	4: "чор",  # or чаҳор
+	5: "панҷ",
+	6: "шаш",
+	7: "ҳафт",
+	8: "ҳашт",
+	9: "нӯҳ",
+	10: "даҳ",
+	11: "ёздаҳ",
+	12: "дувоздаҳ",
+	13: "сездаҳ",
+	14: "чордаҳ",
+	15: "понздаҳ",
+	16: "шонздаҳ",
+	17: "ҳабдаҳ",
+	18: "ҳашдаҳ",
+	19: "нуздаҳ",
+	20: "бист",
+	30: "сӣ",
+	40: "чил",
+	50: "панҷоҳ",  # or панҷох
+	60: "шаст",
+	70: "ҳафтод",
+	80: "ҳаштод",
+	90: "навад",
+	100: "сад",
 }
 faBaseNumKeys = set(faBaseNum.keys())
 
@@ -127,11 +127,11 @@ def convertLarge(groups: list[int]) -> str:
 				t9 = faBigNum[3]
 				for j in range(d):
 					if j > 0:
-						faOrder += "‌"
+						faOrder += " "
 					faOrder += t9
 				if m != 0:
 					if faOrder != "":
-						faOrder = "‌" + faOrder
+						faOrder = " " + faOrder
 					faOrder = faBigNum[m] + faOrder
 			wpart = faOrder if i == 1 and p == 1 else convertSmall(p) + " " + faOrder
 		w_groups.append(wpart)
@@ -192,10 +192,10 @@ def _addOrdinalSuffix(result: str) -> str:
 	if not result:
 		return ""
 	if result.endswith("ӣ"):
-		return result[:-1] + "‌юм"
-	elif result.endswith("як"):
+		return result[:-1] + "юм"
+	if result.endswith("як"):
 		return result + "ум"
-	elif result.endswith("се"):
+	if result.endswith("се"):
 		return result + "вум"
 	return result + "юм"
 
