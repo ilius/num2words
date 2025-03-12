@@ -26,7 +26,6 @@ var (
 )
 
 const (
-	zwnj     = " "
 	tg_and   = "у "
 	tg_zero  = "сифр"
 	tg_first = "якум"
@@ -179,13 +178,13 @@ func convertLarge(groups []uint16) string {
 			t9 := big_words[3]
 			for j := range d {
 				if j > 0 {
-					order += zwnj
+					order += " "
 				}
 				order += t9
 			}
 			if m != 0 {
 				if order != "" {
-					order = zwnj + order
+					order = " " + order
 				}
 				order = big_words[m] + order
 			}
