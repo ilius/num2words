@@ -280,7 +280,7 @@ func ConvertBigIntSigned(bn *big.Int) string {
 
 func addOrdinalSuffix(result string) string {
 	if strings.HasSuffix(result, "ی") {
-		return result + "\u200cام"
+		return result + zwnj + "ام"
 	}
 	if strings.HasSuffix(result, "سه") {
 		resultRunes := []rune(result)

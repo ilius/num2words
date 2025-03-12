@@ -19,8 +19,10 @@ import sys
 zwnj = "\u200c"
 fa_and = " و "
 fa_zero = "صفر"
+fa_first = "اول"  # or "یکم"
+fa_tenth = "دهم"
 
-faBaseNum = {
+small_words = {
 	1: "یک",
 	2: "دو",
 	3: "سه",
@@ -53,15 +55,14 @@ faBaseNum = {
 	300: "سیصد",
 	500: "پانصد",
 }
-faBaseNumKeys = set(faBaseNum.keys())
 
-faBigNumFirst = ["یک", "هزار", "میلیون"]
+big_words_first = ["یک", "هزار", "میلیون"]
 
 # European
-faBigNumEU = faBigNumFirst + ["میلیارد", "بیلیون", "بیلیارد", "تریلیون", "تریلیارد"]
+big_words_EU = big_words_first + ["میلیارد", "بیلیون", "بیلیارد", "تریلیون", "تریلیارد"]
 
 # American
-faBigNumUS = faBigNumFirst + [
+big_words_US = big_words_first + [
 	"بیلیون",
 	"تریلیون",
 	"کوآدریلیون",
@@ -70,10 +71,10 @@ faBigNumUS = faBigNumFirst + [
 ]
 
 # Common in Iran (the rest are uncommon or mistaken)
-faBigNumIran = faBigNumFirst + ["میلیارد", "تریلیون"]
+big_words_IR = big_words_first + ["میلیارد", "تریلیون"]
 
 
-faBigNum = faBigNumIran
+big_words = big_words_IR
 
 
 def extractGroupsByString(st):
@@ -120,12 +121,12 @@ def convertLarge(groups: list[int]) -> str:
 		if i == 0:
 			wpart = convertSmall(p)
 		else:
-			if i < len(faBigNum):
-				faOrder = faBigNum[i]
+			if i < len(big_words):
+				faOrder = big_words[i]
 			else:
 				faOrder = ""
 				d, m = divmod(i, 3)
-				t9 = faBigNum[3]
+				t9 = big_words[3]
 				for j in range(d):
 					if j > 0:
 						faOrder += zwnj
@@ -133,7 +134,7 @@ def convertLarge(groups: list[int]) -> str:
 				if m != 0:
 					if faOrder != "":
 						faOrder = zwnj + faOrder
-					faOrder = faBigNum[m] + faOrder
+					faOrder = big_words[m] + faOrder
 			wpart = faOrder if i == 1 and p == 1 else convertSmall(p) + " " + faOrder
 		w_groups.append(wpart)
 	return fa_and.join(reversed(w_groups))
@@ -143,8 +144,8 @@ def convertLarge(groups: list[int]) -> str:
 def convertSmall(n: int) -> str:
 	if n == 0:
 		return fa_zero
-	if n in faBaseNumKeys:
-		return faBaseNum[n]
+	if n in small_words:
+		return small_words[n]
 	y = n % 10
 	d = int((n % 100) / 10)
 	s = int(n / 100)
@@ -152,21 +153,21 @@ def convertSmall(n: int) -> str:
 	dy = 10 * d + y
 	fa = ""
 	if s != 0:
-		if s * 100 in faBaseNumKeys:
-			fa += faBaseNum[s * 100]
+		if s * 100 in small_words:
+			fa += small_words[s * 100]
 		else:
-			fa += faBaseNum[s] + faBaseNum[100]
+			fa += small_words[s] + small_words[100]
 		if d != 0 or y != 0:
 			fa += fa_and
 	if d != 0:
-		if dy in faBaseNumKeys:
-			fa += faBaseNum[dy]
+		if dy in small_words:
+			fa += small_words[dy]
 			return fa
-		fa += faBaseNum[d * 10]
+		fa += small_words[d * 10]
 		if y != 0:
 			fa += fa_and
 	if y != 0:
-		fa += faBaseNum[y]
+		fa += small_words[y]
 	return fa
 
 
@@ -203,18 +204,18 @@ def _addOrdinalSuffix(norm_fa: str) -> str:
 
 def convert_str_ordinal(st: str):
 	if st == "1":
-		return "اول"  # or "یکم"
+		return fa_first
 	if st == "10":
-		return "دهم"
+		return fa_tenth
 	norm_fa = convert_str(st)
 	return _addOrdinalSuffix(norm_fa)
 
 
 def convert_int_ordinal(num):
 	if num == 1:
-		return "اول"  # or "یکم"
+		return fa_first
 	if num == 10:
-		return "دهم"
+		return fa_tenth
 	norm_fa = convert_int(num)
 	return _addOrdinalSuffix(norm_fa)
 
